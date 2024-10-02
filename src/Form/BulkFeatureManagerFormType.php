@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Va_BulkFeatureManager\Form;
+namespace Va_bulkfeaturemanager\Form;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

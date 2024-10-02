@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Va_BulkFeatureManager\Repository;
+namespace Va_bulkfeaturemanager\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Connection;

@@ -10,7 +10,7 @@ services:
 
   #  data provider
   prestashop.module.va_bulkfeaturemanager.form.dataprovider:
-    class: 'Va_BulkFeatureManager\Form\BulkFeatureManagerFormDataProvider'
+    class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerFormDataProvider'
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository'
 
@@ -19,12 +19,12 @@ services:
     public: true
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
-      - 'Va_BulkFeatureManager\Form\BulkFeatureManagerFormType'
+      - 'Va_bulkfeaturemanager\Form\BulkFeatureManagerFormType'
       - '@prestashop.module.va_bulkfeaturemanager.form.dataprovider'
 
   prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository:
-    class: 'Va_BulkFeatureManager\Repository\BulkFeatureManagerRepository'
+    class: 'Va_bulkfeaturemanager\Repository\BulkFeatureManagerRepository'
     public: true
-    factory: ['@doctrine.orm.entity_manager', getRepository]
     arguments:
-      -
+      - '@doctrine.dbal.default_connection'
+
