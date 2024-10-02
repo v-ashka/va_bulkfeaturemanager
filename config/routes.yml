@@ -1,0 +1,5 @@
+va_bulkfeaturemanager:
+  path: va_bulkfeaturemanager/configuration
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_BulkFeatureManager\Controller\BulkFeatureManagerController::indexAction'

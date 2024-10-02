@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    public: true
+  BulkFeatureManager\Form\BulkFeatureManagerFormType:
+    class: BulkFeatureManager\Form\BulkFeatureManagerFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  #  data provider
+  prestashop.module.va_bulkfeaturemanager.form.dataprovider:
+    class: 'Va_BulkFeatureManager\Form\BulkFeatureManagerFormDataProvider'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository'
+
+  prestashop.module.va_bulkfeaturemanager.form.formbuilder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'Va_BulkFeatureManager\Form\BulkFeatureManagerFormType'
+      - '@prestashop.module.va_bulkfeaturemanager.form.dataprovider'
+
+  prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository:
+    class: 'Va_BulkFeatureManager\Repository\BulkFeatureManagerRepository'
+    public: true
+    factory: ['@doctrine.orm.entity_manager', getRepository]
+    arguments:
+      -
