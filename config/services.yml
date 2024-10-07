@@ -1,30 +1,31 @@
 services:
   _defaults:
     public: true
-  BulkFeatureManager\Form\BulkFeatureManagerFormType:
-    class: BulkFeatureManager\Form\BulkFeatureManagerFormType
+# form type
+  Va_bulkfeaturemanager\Form\BulkFeatureManagerFormType:
+    class: Va_bulkfeaturemanager\Form\BulkFeatureManagerFormType
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
 
-  #  data provider
-  prestashop.module.va_bulkfeaturemanager.form.dataprovider:
-    class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerFormDataProvider'
-    arguments:
-      - '@prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository'
+# form data provider
+  prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_provider:
+    class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerDataProvider'
 
-  prestashop.module.va_bulkfeaturemanager.form.formbuilder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    public: true
-    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+
+  # data handler
+  prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_provider'
       - 'Va_bulkfeaturemanager\Form\BulkFeatureManagerFormType'
-      - '@prestashop.module.va_bulkfeaturemanager.form.dataprovider'
+      - 'BulkFeatureManager'
 
-  prestashop.module.va_bulkfeaturemanager.repository.bulkfeaturemanager_repository:
-    class: 'Va_bulkfeaturemanager\Repository\BulkFeatureManagerRepository'
+# grid factory
+  prestashop.module.va_bulkfeaturemanager.grid.bulkfeaturemanager.grid_definition_factory:
+    class: 'Va_bulkfeaturemanager\Grid\Factory\BulkFeatureManagerGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
-    arguments:
-      - '@doctrine.dbal.default_connection'
-

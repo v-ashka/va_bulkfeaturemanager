@@ -1,4 +1,57 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% block javascripts %}
+  <script>
+$(document).ready(function(){
+  const featureList = document.querySelector('#form_feature_id');
+  const featureValuesList = document.querySelector('#form_feature_id_val');
+  const loadFeatureValues = (featureValList, featureList, firstPageLoad = false) => {
+    Array.from(featureValList.options).forEach(item => {
+      item.dataset.feature_id === featureList.options[featureList.selectedIndex].value ? (item.hidden = false) : (item.hidden = true)
+    })
+    if(!firstPageLoad){
+      Array.from(featureValList.options).every(item => {
+        if(item.hidden === false){
+          item.selected = true;
+          return false;
+        }else{
+          item.selected = false;
+        }
+        return true
+      })
+    }
+
+  }
+
+  loadFeatureValues(featureValuesList, featureList, true)
+
+
+  featureList.addEventListener('change', e => {
+    loadFeatureValues(featureValuesList, featureList);
+  });
+
+})
+
+  </script>
+{% endblock %}
+
 {% block content %}
-<h1>Hello</h1>
+  {{ form_start(bulkFeatureManagerForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Text form types'|trans({}, 'Modules.Demosymfonyformsimple.Admin') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(bulkFeatureManagerForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary float-right" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(bulkFeatureManagerForm) }}
 {% endblock %}
