@@ -27,10 +27,7 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
                'choices' => $this->getFeatureValues(),
                 'choice_attr' => $this->getFeatureValues(true)
            ])
-        ->add('products', CheckboxType::class, [
-            'label' => $this->trans('Products', 'Admin.Va_BulkFeatureManager'),
-            'value' => 'asdasd'
-        ])
+
         ;
     }
 

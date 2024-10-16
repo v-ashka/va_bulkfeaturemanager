@@ -25,7 +25,34 @@ services:
       - 'BulkFeatureManager'
 
 # grid factory
+  #1
   prestashop.module.va_bulkfeaturemanager.grid.bulkfeaturemanager.grid_definition_factory:
     class: 'Va_bulkfeaturemanager\Grid\Factory\BulkFeatureManagerGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
+  #2
+  prestashop.module.va_bulkfeaturemanager.grid.query_builder.bulkfeaturemanager:
+    class: 'Va_bulkfeaturemanager\Grid\Query\BulkFeatureQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+  #3
+  prestashop.module.va_bulkfeaturemanager.grid.data_provider.bulkfeaturemanager:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.query_builder.bulkfeaturemanager'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'quote'
+  #4
+  prestashop.module.va_bulkfeaturemanager.grid.factory.bulkfeaturemanager:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    public: true
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.bulkfeaturemanager.grid_definition_factory'
+      - '@prestashop.module.va_bulkfeaturemanager.grid.data_provider.bulkfeaturemanager'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
