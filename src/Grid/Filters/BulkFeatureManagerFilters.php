@@ -23,7 +23,7 @@ class BulkFeatureManagerFilters extends Filters
     public static function getDefaults()
     {
         return [
-            'limit' => 20,
+            'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_product',
             'sortOrder' => 'asc',

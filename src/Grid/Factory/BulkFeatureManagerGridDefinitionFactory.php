@@ -50,14 +50,20 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'category',
                 ])
             )
+            ->add((new DataColumn('feature_id_name'))
+                ->setName($this->trans('Feature name', [], 'Admin.Advparameters.Feature'))
+            ->setOptions([
+                'field' => 'feature_id_name',
+            ])
+            )
             ;
 
     }
-
+////
     protected function getBulkActions(){
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('action_feature', [], 'Admin.Advparameters.Feature' ))
-                ->setName($this->trans('Config feature', [], 'Admin.Advparameters.Feature'))
+            ->add((new SubmitBulkAction('action_feature'))
+                ->setName($this->trans('Refresh page', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'submit_route' => 'va_bulkfeaturemanager',
                 ])
