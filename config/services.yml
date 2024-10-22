@@ -45,7 +45,7 @@ services:
       - '@prestashop.module.va_bulkfeaturemanager.grid.query_builder.bulkfeaturemanager'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'quote'
+      - 'bulkFeatureManagerGrid'
   #4
   prestashop.module.va_bulkfeaturemanager.grid.factory.bulkfeaturemanager:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -56,3 +56,9 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+# service
+  prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service:
+    class: 'Va_bulkfeaturemanager\Service\BulkFeatureManagerService'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
