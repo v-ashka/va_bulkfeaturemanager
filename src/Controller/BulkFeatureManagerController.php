@@ -50,11 +50,11 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
                                 }
                             $this->addFlash('success', $this->trans(
-                                'Feature id: %featureName% has been added to %productsCount% products',
+                                'Feature id: %featureName% has been added to %productsCount% product/s',
                                 'Modules.Va_bulkfeaturemanager.Admin',
                                 [
                                     '%featureName%' => $formResponse['feature_form']['feature_id'],
-                                    '%productsCount%' => count($formResponse['grid_id'])
+                                    '%productsCount%' => isset($transactionInfo['warning']) ? ( (int) (count($formResponse['grid_id']) - count($transactionInfo['warning']))) : (count($formResponse['grid_id']))
                                 ]
                             ));
                         }else{
@@ -66,22 +66,79 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
                         }
                         break;
                     case 'remove_feature':
-                        //
+                        $transactionInfo = $bulkFeatureManagerService->removeFeatureFromProducts(
+                            $formResponse['feature_form']['feature_id'],
+                            $formResponse['grid_id']
+                        );
+                        if(isset($transactionInfo['success'])){
+                            if(isset($transactionInfo['warning'])){
+                                foreach($transactionInfo['warning'] as $warningProductId){
+                                    $this->addFlash('warning', $this->trans(
+                                        'Cannot remove feature id: %featureName% because it does not exist in product with id: %productId%',
+                                        'Modules.Va_bulkfeaturemanager.Admin',
+                                        [
+                                            '%featureName%' => $formResponse['feature_form']['feature_id'],
+                                            '%productId%' => $warningProductId
+                                        ]
+                                    ));
+                                }
+
+                            }
+
+                            $this->addFlash('success', $this->trans(
+                                'Removed feature id: %featureName% from %productsCount% product/s',
+                                'Modules.Va_bulkfeaturemanager.Admin',
+                                [
+                                    '%featureName%' => $formResponse['feature_form']['feature_id'],
+                                    '%productsCount%' => count($transactionInfo['success'])
+                                ]
+                            ));
+                        }else{
+                            $this->addFlash('error',
+                                $this->trans(
+                                    'The selected products does not have this feature',
+                                    'Modules.Va_bulkfeaturemanager.Admin')
+                            );
+                        }
                         break;
 
                     case 'delete_all':
-                        //
+                        $transactionInfo = $bulkFeatureManagerService->removeAllFeaturesFromProducts(
+                            $formResponse['grid_id']
+                        );
+                        if(isset($transactionInfo['success'])){
+
+                            foreach($transactionInfo['success'] as $infoProductId){
+                                $this->addFlash('info', $this->trans(
+                                    'Deleted all features from product id: %productId%',
+                                    'Modules.Va_bulkfeaturemanager.Admin',
+                                    [
+
+                                        '%productId%' => $infoProductId
+                                    ]
+                                ));
+                            }
+
+                            $this->addFlash('success', $this->trans(
+                                'Removed all features from %productsCount% product/s',
+                                'Modules.Va_bulkfeaturemanager.Admin',
+                                [
+                                    '%productsCount%' => count($transactionInfo['success'])
+                                ]
+                            ));
+                        }
+
                         break;
                 }
             }else{
                 $this->addFlash('error',
                     $this->trans(
-                        'Please select products before add or delete features',
+                        'Please select products before add or delete actions',
                         'Modules.Va_bulkfeaturemanager.Admin')
                 );
             }
 
-
+            return $this->redirectToRoute('va_bulkfeaturemanager');
         }
 
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/index.html.twig', [
