@@ -14,6 +14,20 @@ class BulkFeatureManagerService
         $this->connection = $connection;
     }
 
+    private function findExisitingFeature($qbSelect, $featureId, $itemId){
+        $validData = $qbSelect
+            ->select('COUNT(1)')
+            ->from($this->dbPrefix . 'feature_product')
+            ->where("id_feature = :id_feature")
+            ->andWhere("id_product = :id_product")
+            ->setParameter(":id_feature", $featureId)
+            ->setParameter(':id_product',  $itemId)
+            ->execute()
+            ->fetchOne();
+
+        return $validData;
+    }
+
     public function addFeaturesToProducts(int $featureId, int $featureValueId, array $productsId){
         $transactionLog = [];
 
@@ -22,20 +36,10 @@ class BulkFeatureManagerService
             foreach($productsId as $itemId){
 //             before insert, check if featureId is not related already with productId
                 $qbSelect = $this->connection->createQueryBuilder();
-
-                $validFeature = $qbSelect
-                    ->select('COUNT(1)')
-                    ->from($this->dbPrefix . 'feature_product')
-                    ->where("id_feature = :id_feature")
-                    ->andWhere("id_product = :id_product")
-                    ->setParameter(":id_feature", $featureId)
-                    ->setParameter(':id_product',  $itemId)
-                    ->execute()
-                    ->fetchOne();
+                $validFeature = $this->findExisitingFeature($qbSelect, $featureId, $itemId);
 
                 if(!$validFeature){
                     $qbInsert = $this->connection->createQueryBuilder();
-
                     $qbInsert
                         ->insert($this->dbPrefix . 'feature_product')
                         ->values([
@@ -63,12 +67,58 @@ class BulkFeatureManagerService
         return $transactionLog;
     }
 
-    protected function removeFeatureFromProducts(){
+    public function removeFeatureFromProducts(int $featureId, array $productsId){
+        $transactionLog = [];
+        $this->connection->beginTransaction();
+        try{
 
+
+            foreach($productsId as $itemId){
+                $qbDelete = $this->connection->createQueryBuilder();
+                $validFeature = $this->findExisitingFeature($qbDelete, $featureId, $itemId);
+                if($validFeature){
+                    $qbDelete
+                        ->delete($this->dbPrefix . 'feature_product')
+                        ->where('id_product = :id_product')
+                        ->andWhere('id_feature = :id_feature')
+                        ->setParameter(":id_product", $itemId)
+                        ->setParameter(':id_feature', $featureId)
+                        ->execute()
+                    ;
+                    $transactionLog['success'][] = $itemId;
+                }else{
+                    $transactionLog['warning'][] = $itemId;
+                }
+            }
+            $this->connection->commit();
+        } catch(\Exception $e){
+            $this->connection->rollBack();
+            throw $e;
+        }
+        return $transactionLog;
     }
 
-    protected function removeAllFeaturesFromProducts(){
+    public function removeAllFeaturesFromProducts(array $productsId){
+        $transactionLog = [];
+        $this->connection->beginTransaction();
+        try{
+            foreach($productsId as $itemId){
+                $qbDelete = $this->connection->createQueryBuilder();
+                $qbDelete
+                    ->delete($this->dbPrefix . 'feature_product')
+                    ->where('id_product = :id_product')
+                    ->setParameter(":id_product", $itemId)
+                    ->execute()
+                ;
+                $transactionLog['success'][] = $itemId;
+            }
+            $this->connection->commit();
+        } catch(\Exception $e){
+            $this->connection->rollBack();
+            throw $e;
+        }
 
+        return $transactionLog;
     }
 
 }
