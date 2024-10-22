@@ -3,8 +3,34 @@
 {% block content %}
   <script>
 $(document).ready(function(){
+  const choiceActionList = document.querySelector('#form_feature_method');
   const featureList = document.querySelector('#form_feature_id');
   const featureValuesList = document.querySelector('#form_feature_id_val');
+
+  const manipulateInputsView = (showItems = true) => {
+      if(showItems){
+        featureValuesList.parentElement.parentElement.classList.remove('d-none');
+        featureList.parentElement.parentElement.classList.remove('d-none');
+      }else{
+        featureValuesList.parentElement.parentElement.classList.add('d-none');
+        featureList.parentElement.parentElement.classList.add('d-none');
+      }
+  }
+
+  const checkSelectedAction = (element) => {
+    const choiceActionSelectedOption = element.options[element.selectedIndex].value
+    manipulateInputsView(true)
+
+    if(choiceActionSelectedOption === 'remove_feature'){
+      featureValuesList.parentElement.parentElement.classList.add('d-none');
+    }
+    if(choiceActionSelectedOption === 'delete_all'){
+      manipulateInputsView(false)
+      featureValuesList.parentElement.parentElement.classList.add('d-none');
+    }
+  }
+
+
   const loadFeatureValues = (featureValList, featureList, firstPageLoad = false) => {
     Array.from(featureValList.options).forEach(item => {
       item.dataset.feature_id === featureList.options[featureList.selectedIndex].value ? (item.hidden = false) : (item.hidden = true)
@@ -29,6 +55,11 @@ $(document).ready(function(){
   featureList.addEventListener('change', e => {
     loadFeatureValues(featureValuesList, featureList);
   });
+
+  checkSelectedAction(choiceActionList)
+  choiceActionList.addEventListener('change', e => {
+    checkSelectedAction(choiceActionList)
+  })
 
 })
 $(document).ready(function () {
@@ -58,26 +89,24 @@ $(document).ready(function () {
 });
 
   </script>
-
-
   {{ form_start(bulkFeatureManagerForm) }}
   <div class="card">
     <h3 class="card-header">
-      <i class="material-icons">settings</i> {{ 'Text form types'|trans({}, 'Modules.Demosymfonyformsimple.Admin') }}
+      <i class="material-icons">settings</i> {{ 'Bulk feature edit'|trans({}, 'Modules.Demosymfonyformsimple.Admin') }}
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
         {{ form_widget(bulkFeatureManagerForm) }}
       </div>
-      <div class="row">
+      <div class="row w-75 mx-auto">
         <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureProductsGrid} %}
+          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': featureProductsGrid} %}
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary float-right" id="save-button">
+        <button class="btn btn-primary float-right" id="save-button" type="submit">
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>
