@@ -6,6 +6,7 @@ namespace Va_bulkfeaturemanager\Form;
 
 use Db;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -16,13 +17,23 @@ use Symfony\Component\Form\FormEvents;
 class BulkFeatureManagerFormType extends TranslatorAwareType{
 
     public function buildForm(FormBuilderInterface $builder, array $options){
-        $builder->add('feature_id', ChoiceType::class, [
-           'label' => $this->trans('Select feature to add to elements', 'Admin.Va_BulkFeatureManager'),
+        $builder
+            ->add('feature_method', ChoiceType::class, [
+                'label' => $this->trans('Select feature action', 'Admin.Va_BulkFeatureManager'),
+                'choices' => [
+                    'Add Feature' => 'add_feature',
+                    'Remove feature' => 'remove_feature',
+                    'Delete all features from product' => 'delete_all',
+                ],
+                'required' => true,
+            ])
+            ->add('feature_id', ChoiceType::class, [
+           'label' => $this->trans('Select feature type', 'Admin.Va_BulkFeatureManager'),
             'required' => true,
             'choices' => $this->getFeatures()
         ])
             ->add('feature_id_val', ChoiceType::class, [
-               'label' => $this->trans('Select feature value to add to elements','Admin.Va_BulkFeatureManager'),
+               'label' => $this->trans('Select feature value','Admin.Va_BulkFeatureManager'),
                'required' => true,
                'choices' => $this->getFeatureValues(),
                 'choice_attr' => $this->getFeatureValues(true)
