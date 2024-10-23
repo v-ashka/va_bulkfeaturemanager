@@ -44,18 +44,6 @@ class Va_bulkfeaturemanager extends Module
         ],
     ];
 
-//    SELECT p.* FROM `ps_feature_product` fp INNER JOIN ps_product p WHERE p.id_product = fp.id_product;
-
-    //INSERT INTO `ps_feature_product` (id_feature, id_product, id_feature_value)
-    //VALUES
-    //(3, 1, 11),
-    //(3, 2, 12),
-    //(3, 3, 13),
-    //(3, 4, 14),
-    //(3, 5, 15),
-    //(3, 6, 12);
-
-
     public function __construct()
     {
         $this->name = 'va_bulkfeaturemanager';
@@ -83,15 +71,66 @@ class Va_bulkfeaturemanager extends Module
      */
     public function install()
     {
-        Configuration::updateValue('VA_BULKFEATUREMANAGER_LIVE_MODE', false);
-
-        return parent::install();
+        return parent::install() &&
+            $this->registerHook('actionFrontControllerSetMedia') &&
+            $this->registerHook('displayFrontFeatureInfo');
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('VA_BULKFEATUREMANAGER_LIVE_MODE');
+        return parent::uninstall() &&
+            $this->unregisterHook('actionFrontControllerSetMedia') &&
+            $this->unregisterHook('displayFrontFeatureInfo');
+    }
 
-        return parent::uninstall();
+    public function hookDisplayFrontFeatureInfo($params){
+        $bulkFeatureManagerService = $this->get('prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service');
+        $productId = Tools::getValue('id_product');
+        $productFeatures = $bulkFeatureManagerService->getFeatureByProductId($productId);
+
+            $specialFeature = $this->extractSpecialFeature(3, $productFeatures, true);
+            $productPrice = Product::getPriceStatic(
+                $productId,
+                true, // z podatkiem
+                null, // id kombinacji produktu (jeśli istnieje)
+                Context::getContext()->getComputingPrecision(), // precyzja
+                null,
+                false,
+                true, // z uwzględnieniem rabatów
+                1 // ilość
+            );
+            $baseLiterCapacity = 100;
+            dd($specialFeature);
+            $pricePerLiter = round(( $productPrice * $baseLiterCapacity ) / ((int) $specialFeature[0]['value']), '2');
+
+            $this->smarty->assign([
+                'features' => $this->extractSpecialFeature(3, $productFeatures, true),
+                'pricePerBaseUnit' => $pricePerLiter,
+                'baseUnitCapacity' => $baseLiterCapacity,
+                'currency' => $this->context->currency->symbol,
+                'baseUnitSymbol' => $specialFeature[0]['id_feature'] === 3 ? 'L' : 'kg'
+            ]);
+            return $this->fetch('module:va_bulkfeaturemanager/views/templates/front/featureinfo.tpl');
+
+
+    }
+
+    private function extractSpecialFeature(int $featureId, array $productFeatures, bool $displayExtractedArray = false): array{
+        return current(array_filter($productFeatures, function($item) use ($displayExtractedArray, $featureId) {
+            return $displayExtractedArray ?
+                ($item['id_feature'] !== $featureId ) : ($item['id_feature'] === $featureId);
+        }));
+    }
+
+    public function hookActionFrontControllerSetMedia()
+    {
+        $this->context->controller->registerStylesheet(
+            'va_bulkfeaturemanager',
+            'modules/' . $this->name . '/views/css/front.css',
+            [
+                'media' => 'all',
+                'priority' => 1000,
+            ]
+        );
     }
 }
