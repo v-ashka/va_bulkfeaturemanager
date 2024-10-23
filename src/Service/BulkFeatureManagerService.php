@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Va_bulkfeaturemanager\Service;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+
 class BulkFeatureManagerService
 {
     private $connection;
@@ -119,6 +121,25 @@ class BulkFeatureManagerService
         }
 
         return $transactionLog;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFeatureByProductId(int $productId){
+
+        $qbSelectId = $this->connection->createQueryBuilder();
+        return $qbSelectId
+                ->select('fid.id_feature, fid.id_feature_value, fl.name, fvl.value')
+                ->from($this->dbPrefix . 'feature_product', 'fid')
+                ->where('id_product = :id_product')
+                ->setParameter(':id_product', $productId)
+            ->innerJoin('fid', $this->dbPrefix . 'feature_lang', 'fl', 'fid.id_feature = fl.id_feature')
+            ->innerJoin('fid', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fid.id_feature_value')
+                ->execute()
+            ->fetchAllAssociative()
+                ;
+
     }
 
 }

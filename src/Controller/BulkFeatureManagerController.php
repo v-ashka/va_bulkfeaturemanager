@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Va_bulkfeaturemanager\Controller;
 
-use Doctrine\DBAL\Connection;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Grid\Filters\BulkFeatureManagerFilters;
-use Va_bulkfeaturemanager\Service\BulkFeatureManagerService;
-
 
 class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
@@ -142,6 +138,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         }
 
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/index.html.twig', [
+            'layoutTitle' => $this->trans('Bulk Feature Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
             'bulkFeatureManagerForm' => $resForm->createView(),
             'featureProductsGrid' => $this->presentGrid($featureProductsGrid)
 
