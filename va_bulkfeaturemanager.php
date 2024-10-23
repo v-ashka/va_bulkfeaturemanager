@@ -100,15 +100,15 @@ class Va_bulkfeaturemanager extends Module
                 1 // ilość
             );
             $baseLiterCapacity = 100;
-            dd($specialFeature);
-            $pricePerLiter = round(( $productPrice * $baseLiterCapacity ) / ((int) $specialFeature[0]['value']), '2');
+//            dd($specialFeature);
+            $pricePerLiter = round(( $productPrice * $baseLiterCapacity ) / ((int) $specialFeature['value']), '2');
 
             $this->smarty->assign([
                 'features' => $this->extractSpecialFeature(3, $productFeatures, true),
                 'pricePerBaseUnit' => $pricePerLiter,
                 'baseUnitCapacity' => $baseLiterCapacity,
                 'currency' => $this->context->currency->symbol,
-                'baseUnitSymbol' => $specialFeature[0]['id_feature'] === 3 ? 'L' : 'kg'
+                'baseUnitSymbol' => $specialFeature['id_feature'] === 3 ? 'ml' : 'kg'
             ]);
             return $this->fetch('module:va_bulkfeaturemanager/views/templates/front/featureinfo.tpl');
 
@@ -117,8 +117,7 @@ class Va_bulkfeaturemanager extends Module
 
     private function extractSpecialFeature(int $featureId, array $productFeatures, bool $displayExtractedArray = false): array{
         return current(array_filter($productFeatures, function($item) use ($displayExtractedArray, $featureId) {
-            return $displayExtractedArray ?
-                ($item['id_feature'] !== $featureId ) : ($item['id_feature'] === $featureId);
+            return  $item['id_feature'] === $featureId;
         }));
     }
 
