@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite0f213249181a11b5bf661fa9d001e95
+class ComposerStaticInit1986b299da7aaebcb589129df1af5990
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -1189,16 +1189,23 @@ class ComposerStaticInite0f213249181a11b5bf661fa9d001e95
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
-        'Va_BulkFeatureManager\\Controller\\BulkFeatureManagerController' => __DIR__ . '/../..' . '/src/Controller/BulkFeatureManagerController.php',
+        'Va_bulkfeaturemanager\\Controller\\BulkFeatureManagerController' => __DIR__ . '/../..' . '/src/Controller/BulkFeatureManagerController.php',
+        'Va_bulkfeaturemanager\\Form\\BulkFeatureManagerDataProvider' => __DIR__ . '/../..' . '/src/Form/BulkFeatureManagerDataProvider.php',
+        'Va_bulkfeaturemanager\\Form\\BulkFeatureManagerFormType' => __DIR__ . '/../..' . '/src/Form/BulkFeatureManagerFormType.php',
+        'Va_bulkfeaturemanager\\Grid\\Factory\\BulkFeatureManagerGridDefinitionFactory' => __DIR__ . '/../..' . '/src/Grid/Factory/BulkFeatureManagerGridDefinitionFactory.php',
+        'Va_bulkfeaturemanager\\Grid\\Filters\\BulkFeatureManagerFilters' => __DIR__ . '/../..' . '/src/Grid/Filters/BulkFeatureManagerFilters.php',
+        'Va_bulkfeaturemanager\\Grid\\Query\\BulkFeatureQueryBuilder' => __DIR__ . '/../..' . '/src/Grid/Query/BulkFeatureQueryBuilder.php',
+        'Va_bulkfeaturemanager\\Repository\\BulkFeatureManagerRepository' => __DIR__ . '/../..' . '/src/Repository/BulkFeatureManagerRepository.php',
+        'Va_bulkfeaturemanager\\Service\\BulkFeatureManagerService' => __DIR__ . '/../..' . '/src/Service/BulkFeatureManagerService.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite0f213249181a11b5bf661fa9d001e95::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite0f213249181a11b5bf661fa9d001e95::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite0f213249181a11b5bf661fa9d001e95::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1986b299da7aaebcb589129df1af5990::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1986b299da7aaebcb589129df1af5990::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1986b299da7aaebcb589129df1af5990::$classMap;
 
         }, null, ClassLoader::class);
     }

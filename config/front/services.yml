@@ -1,0 +1,8 @@
+# service
+services:
+  prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service:
+    public: true
+    class: 'Va_bulkfeaturemanager\Service\BulkFeatureManagerService'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
