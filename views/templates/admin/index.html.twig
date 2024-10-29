@@ -1,6 +1,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+
+
 {% block content %}
+
   <script>
 $(document).ready(function(){
   const choiceActionList = document.querySelector('#form_feature_method');
@@ -89,6 +92,10 @@ $(document).ready(function () {
 });
 
   </script>
+<div class="py-2">
+  <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager_config_unit') }}">
+     {{ 'Unit feature list'|trans({}, 'Admin.Actions') }}
+  </a>
   {{ form_start(bulkFeatureManagerForm) }}
   <div class="card">
     <h3 class="card-header">
