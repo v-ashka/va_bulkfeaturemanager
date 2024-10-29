@@ -7,6 +7,7 @@ namespace Va_bulkfeaturemanager\Controller;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Grid\Filters\BulkFeatureManagerFilters;
+use Va_bulkfeaturemanager\Grid\Filters\UnitFeatureConfigurationFilters;
 
 class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
@@ -139,9 +140,21 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/index.html.twig', [
             'layoutTitle' => $this->trans('Bulk Feature Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
+
             'bulkFeatureManagerForm' => $resForm->createView(),
             'featureProductsGrid' => $this->presentGrid($featureProductsGrid)
 
+        ]);
+    }
+
+    public function unitFeatureConfigurationIndex(UnitFeatureConfigurationFilters $filters, Request $request){
+        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler');
+        $grid = $this->get('prestashop.module.va_bulkfeaturemanager.unitfeatureconfiguration.grid.factory');
+        $featuresGrid = $grid->getGrid($filters);
+
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/unitFeatureConfiguration.html.twig', [
+            'layoutTitle' => $this->trans('Unit Feature Configuration', 'Modules.Va_bulkfeaturemanager.Admin'),
+            'featuresGrid' => $this->presentGrid($featuresGrid)
         ]);
     }
 
