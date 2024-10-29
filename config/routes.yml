@@ -3,3 +3,10 @@ va_bulkfeaturemanager:
   methods: [GET, POST]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::indexAction'
+
+
+va_bulkfeaturemanager_config_unit:
+  path: va_bulkfeaturemanager/configuration_unit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::unitFeatureConfigurationIndex'

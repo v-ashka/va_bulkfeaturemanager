@@ -9,7 +9,7 @@ services:
     tags:
       - { name: form.type }
 
-# form data provider
+# form data provider - featuremanager
   prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_provider:
     class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerDataProvider'
 
@@ -62,3 +62,55 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+
+## unitfeatureconfiguration - form
+
+
+#form data provider
+  #1
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
+  #2
+
+  # data handler
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
+      - 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
+      - 'UnitFeatureConfiguration'
+
+# grid unitfeatureconfiguration
+  #1
+  prestashop.module.va_bulkfeaturemanager.grid.unitfeatureconfiguration.grid_definition_factory:
+    class: 'Va_bulkfeaturemanager\Grid\Factory\UnitFeatureConfigurationDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+  #2
+  prestashop.module.va_bulkfeaturemanager.grid.unitfeatureconfiguration.query_builder:
+    class: 'Va_bulkfeaturemanager\Grid\Query\UnitFeatureConfigurationQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+  #3
+  prestashop.module.va_bulkfeaturemanager.unitfeatureconfiguration.grid.data_provider:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.unitfeatureconfiguration.query_builder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'unitFeatureConfigurationGrid'
+  #4
+  prestashop.module.va_bulkfeaturemanager.unitfeatureconfiguration.grid.factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    public: true
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.unitfeatureconfiguration.grid_definition_factory'
+      - '@prestashop.module.va_bulkfeaturemanager.unitfeatureconfiguration.grid.data_provider'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
