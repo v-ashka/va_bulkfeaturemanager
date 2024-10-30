@@ -1,15 +1,15 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-
 {% block content %}
   <script>
+
+    console.log('test')
     $(document).ready(function () {
       window.prestashop.component.initComponents([
         'Grid',
       ]);
       // Learn more about components in documentation
       // https://devdocs.prestashop.com/1.7/development/components/global-components/
-      const grid = new window.prestashop.component.Grid('unitFeatureConfigurationGrid');
+      const grid = new window.prestashop.component.Grid('gridFeatureList');
       grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
       grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
       grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
@@ -30,35 +30,25 @@
     });
 
   </script>
-<div class="py-2">
+<div class="py-4">
   <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager') }}">
     {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
   </a>
   <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager') }}">
     <i class="material-icons">add</i>  {{ 'Add new feature'|trans({}, 'Admin.Actions') }}
   </a>
-<h1>Unit feature configuraiton</h1>
 </div>
 
   <div class="card">
     <div class="card-body">
-      <div class="form-wrapper">
-
-      </div>
+      {% block featurelist_panel %}
       <div class="row">
         <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': featuresGrid} %}
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featuresGrid} %}
         </div>
       </div>
+      {% endblock %}
     </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-primary float-right" id="save-button" type="submit">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
-      </div>
-    </div>
-
   </div>
   {% block javascripts %}
     <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
