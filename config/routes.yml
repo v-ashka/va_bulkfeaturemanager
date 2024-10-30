@@ -2,11 +2,29 @@ va_bulkfeaturemanager:
   path: va_bulkfeaturemanager/configuration
   methods: [GET, POST]
   defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayProductConfiguration'
+
+va_bulkfeaturemanager_features_list:
+  path: va_bulkfeaturemanager/features/list
+  methods: GET
+  defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::indexAction'
 
-
-va_bulkfeaturemanager_config_unit:
-  path: va_bulkfeaturemanager/configuration_unit
-  methods: [GET, POST]
+va_bulkfeaturemanager_search_feature:
+  path: va_bulkfeaturemanager/search_grid
+  methods: POST
   defaults:
-    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::unitFeatureConfigurationIndex'
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::searchAction'
+
+#
+#show_test:
+#  path: boxmanagement/show-index
+#  methods: GET
+#  defaults:
+#    _controller: 'BoxManagement\Controller\BoxManagementController::indexAction'
+#
+#boxmodule_boxitem_search:
+#  path: boxmanagement/show-index
+#  methods: POST
+#  defaults:
+#    _controller: 'BoxManagement\Controller\BoxManagementController::searchAction'
