@@ -9,9 +9,9 @@
  */
 declare(strict_types=1);
 
-namespace Va_bulkfeaturemanager\Grid\Filters;
+namespace Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use Va_bulkfeaturemanager\Grid\Factory\BulkFeatureManagerGridDefinitionFactory;
+use Va_bulkfeaturemanager\Grid\GridProductsFeature\Factory\BulkFeatureManagerGridDefinitionFactory;
 
 class BulkFeatureManagerFilters extends Filters
 {
@@ -23,7 +23,7 @@ class BulkFeatureManagerFilters extends Filters
     public static function getDefaults()
     {
         return [
-            'limit' => 50,
+            'limit' => 55,
             'offset' => 0,
             'orderBy' => 'id_product',
             'sortOrder' => 'asc',

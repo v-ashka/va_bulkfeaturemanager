@@ -6,12 +6,13 @@ namespace Va_bulkfeaturemanager\Controller;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
-use Va_bulkfeaturemanager\Grid\Filters\BulkFeatureManagerFilters;
-use Va_bulkfeaturemanager\Grid\Filters\UnitFeatureConfigurationFilters;
+use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
+use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
+use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
 
 class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
-    public function indexAction(BulkFeatureManagerFilters $filters, Request $request){
+    public function displayProductConfiguration(BulkFeatureManagerFilters $filters, Request $request){
         $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_handler');
         $grid = $this->get('prestashop.module.va_bulkfeaturemanager.grid.factory.bulkfeaturemanager');
         $resForm = $res->getForm();
@@ -147,15 +148,28 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         ]);
     }
 
-    public function unitFeatureConfigurationIndex(UnitFeatureConfigurationFilters $filters, Request $request){
-        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler');
-        $grid = $this->get('prestashop.module.va_bulkfeaturemanager.unitfeatureconfiguration.grid.factory');
-        $featuresGrid = $grid->getGrid($filters);
+    public function indexAction(UnitFeatureFilters $filters)
+    {
+        $gridFeatureListFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.factory');
+        $gridFeatureList = $gridFeatureListFactory->getGrid($filters);
 
-        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/unitFeatureConfiguration.html.twig', [
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
+            'enableSidebar' => true,
             'layoutTitle' => $this->trans('Unit Feature Configuration', 'Modules.Va_bulkfeaturemanager.Admin'),
-            'featuresGrid' => $this->presentGrid($featuresGrid)
+            'featuresGrid' => $this->presentGrid($gridFeatureList),
+            'createNewBox' => $this->redirectToRoute('va_bulkfeaturemanager_search_feature'),
         ]);
+    }
+
+    public function searchAction(Request $request){
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        dump($responseBuilder);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory'),
+            $request,
+            UnitFeatureDefinitionFactory::GRID_ID,
+            'va_bulkfeaturemanager_features_list'
+        );
     }
 
 }

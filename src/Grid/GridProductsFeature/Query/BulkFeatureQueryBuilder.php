@@ -2,9 +2,8 @@
 
 
 declare(strict_types=1);
-namespace Va_bulkfeaturemanager\Grid\Query;
+namespace Va_bulkfeaturemanager\Grid\GridProductsFeature\Query;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -44,6 +43,7 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
         return $qb;
 
     }
+
 
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {

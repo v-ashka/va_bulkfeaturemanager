@@ -1,11 +1,10 @@
 <?php
 
-namespace Va_bulkfeaturemanager\Grid\Factory;
+namespace Va_bulkfeaturemanager\Grid\GridProductsFeature\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
@@ -59,7 +58,7 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
             ;
 
     }
-////
+//
     protected function getBulkActions(){
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('action_feature'))

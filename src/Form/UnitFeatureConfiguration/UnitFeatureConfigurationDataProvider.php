@@ -8,11 +8,12 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
 
     public function getData()
     {
+
         return [];
     }
 
     public function setData(array $data)
     {
-       return $data;
+        return $data;
     }
 }
