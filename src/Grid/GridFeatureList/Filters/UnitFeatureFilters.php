@@ -14,7 +14,7 @@ class UnitFeatureFilters extends Filters
         return [
             'limit' => 25,
             'offset' => 0,
-            'orderBy' => 'uf.id_unit_feature',
+            'orderBy' => 'id_unit_feature',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

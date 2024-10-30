@@ -152,18 +152,18 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
     {
         $gridFeatureListFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.factory');
         $gridFeatureList = $gridFeatureListFactory->getGrid($filters);
-
+            dump($gridFeatureList);
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Unit Feature Configuration', 'Modules.Va_bulkfeaturemanager.Admin'),
             'featuresGrid' => $this->presentGrid($gridFeatureList),
-            'createNewBox' => $this->redirectToRoute('va_bulkfeaturemanager_search_feature'),
+
         ]);
     }
 
     public function searchAction(Request $request){
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-        dump($responseBuilder);
+//        dd($responseBuilder);
         return $responseBuilder->buildSearchResponse(
             $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory'),
             $request,

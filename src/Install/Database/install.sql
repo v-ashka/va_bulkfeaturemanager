@@ -29,4 +29,35 @@ CREATE TABLE PREFIX_unit_feature_product (
                                       REFERENCES PREFIX_unit_feature_value(id_unit_feature_value) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO PREFIX_unit_feature (id_unit_feature, unit_feature_name, unit_feature_shortcut) VALUES
+                                                                                              (1, 'Waga', 'kg'),
+                                                                                              (2, 'Pojemność', 'l'),
+                                                                                              (3, 'Ilość', 'szt');
+
+
+-- Wartości dla Waga (id_unit_feature = 1)
+INSERT INTO PREFIX_unit_feature_value (id_unit_feature, value) VALUES
+                                                                 (1, '300'), (1, '200'), (1, '100'), (1, '1000'), (1, '500'),
+                                                                 (1, '400'), (1, '600'), (1, '700'), (1, '800'), (1, '900');
+
+-- Wartości dla Pojemność (id_unit_feature = 2)
+INSERT INTO PREFIX_unit_feature_value (id_unit_feature, value) VALUES
+                                                                 (2, '300'), (2, '200'), (2, '100'), (2, '1000'), (2, '500'),
+                                                                 (2, '400'), (2, '600'), (2, '700'), (2, '800'), (2, '900');
+
+-- Wartości dla Ilość (id_unit_feature = 3)
+INSERT INTO PREFIX_unit_feature_value (id_unit_feature, value) VALUES
+                                                                 (3, '1'), (3, '2'), (3, '3'), (3, '4'), (3, '5'),
+                                                                 (3, '6'), (3, '7'), (3, '8'), (3, '9'), (3, '10'),
+                                                                 (3, '11'), (3, '12'), (3, '13'), (3, '14'), (3, '15'),
+                                                                 (3, '16'), (3, '17'), (3, '18'), (3, '19'), (3, '20'),
+                                                                 (3, '21'), (3, '22'), (3, '23'), (3, '24');
+
+-- Losowe przypisania cech do produktów (id_product od 1 do 19)
+INSERT INTO PREFIX_unit_feature_product (id_unit_feature, id_unit_feature_value, id_product, id_product_attribute) VALUES
+                                                                                                                     (1, 1, 1, 1),
+                                                                                                                     (2, 2, 2, 9),
+                                                                                                                     (2, 3, 2, 10),
+                                                                                                                     (3, 5, 3, 1),
+                                                                                                                     (1, 7, 4, 1);
 

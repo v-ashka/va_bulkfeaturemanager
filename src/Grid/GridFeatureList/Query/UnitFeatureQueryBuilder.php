@@ -40,8 +40,11 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if('id_unit_feature' === $name){
-                $qb->andWhere('uf.`id_unit_feature` =: ' . $name);
-                $qb->setParameter($name, $value);
+                $qb->andWhere("uf.`id_unit_feature` = :id_unit_feature");
+//                ->where("id_feature = :id_feature")
+//                    ->andWhere("id_product = :id_product")
+//                    ->setParameter(":id_feature", $featureId)
+                $qb->setParameter(":id_unit_feature", $value);
                 continue;
             }
 
@@ -57,7 +60,7 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
 
         $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut')
-            ->groupBy('uf.id_unit_feature')
+//            ->groupBy('uf.id_unit_feature')
         ;
 
         $this->searchCriteriaApplicator
