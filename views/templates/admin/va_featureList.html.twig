@@ -30,15 +30,9 @@
     });
 
   </script>
-<div class="py-4">
-  <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager') }}">
-    {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
-  </a>
-  <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager') }}">
-    <i class="material-icons">add</i>  {{ 'Add new feature'|trans({}, 'Admin.Actions') }}
-  </a>
-</div>
-
+  {% block top_menu %}
+    {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/top_menu.html.twig' %}
+  {% endblock %}
   <div class="card">
     <div class="card-body">
       {% block featurelist_panel %}
