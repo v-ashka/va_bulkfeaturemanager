@@ -97,25 +97,46 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'gridFeatureList'
 
-  #form data provider
-
+  #form data provider - UnitFeatureConfiguration
+  #1
   Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType:
     class: Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
-  #1
-  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
-    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
 
   #2
-  # data handler
-  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
     arguments:
-      - '@form.factory'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+
+  prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository:
+    class: Va_bulkfeaturemanager\Repository\UnitFeatureRepository
+    public: true
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - Va_bulkfeaturemanager\Entity\UnitFeature
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
       - 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType'
-      - 'BulkFeatureManager'
+      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.unit_feature_configuration_data_handler:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureDataHandler'
+    #args to constructor
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - "@doctrine.orm.default_entity_manager"
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    public: true
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.unit_feature_configuration_data_handler'
