@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Va_bulkfeaturemanager\Controller;
 
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Entity\UnitFeature;
@@ -193,46 +194,48 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         ]);
     }
     public function addNewFeatureAction(Request $request){
-        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
-        $resForm = $res->getForm();
-        $resForm->handleRequest($request);
-        if($resForm->isSubmitted() && $resForm->isValid()){
-            $errors = [];
-            $formData = $resForm->getData();
-            $em = $this->container->get('doctrine.orm.entity_manager');
+        $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
+        $featureForm = $unitFeatureBuilder->getForm();
+        $featureForm->handleRequest($request);
 
+        $featureFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.form_handler');
 
-            $unitFeature = new UnitFeature();
+        $result = $featureFormHandler->handle($featureForm);
 
-            if($formData['unit_feature_name'] === null){
-                $errors['unit_feature_name'] = $this->trans('Feature name must be specified', 'Modules.Va_bulkfeaturemanager.Admin');
-            }
+        if(null !== $result->getIdentifiableObjectId()){
+            $this->addFlash('success', $this->trans('A new feature has been successfully created', 'Admin.Va_bulkfeaturemanager.Feature'));
 
-            if($formData['unit_feature_shortcut'] === null){
-                $errors['unit_feature_shortcut'] = $this->trans('Feature shortcut must be specified', 'Modules.Va_bulkfeaturemanager.Admin');
-            }
-
-            if(empty($errors)){
-
-                $unitFeature->setUnitFeatureName($formData['unit_feature_name']);
-                $unitFeature->setUnitFeatureShortcut($formData['unit_feature_shortcut']);
-
-                $em->persist($unitFeature);
-                $em->flush();
-
-                $this->addFlash('success', $this->trans('A new feature has been successfully created ', 'Modules.Va_bulkfeaturemanager.Admin'));
-            }else{
-                $this->addFlash('error', $errors);
-                return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
-            }
             return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
-
         }
+
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/feature-form.html.twig', [
             'enableSidebar' => true,
-            'feature_form' => $resForm->createView(),
+            'feature_form' => $featureForm->createView(),
         ]);
 
+    }
+
+    public function deleteFeatureAction(int $featureId){
+        $repository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository');
+
+        try{
+            $feature = $repository->findOneById($featureId);
+        } catch (EntityNotFoundException $e){
+            $feature = null;
+        }
+
+        if(null !== $feature){
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $entityManager->remove($feature);
+            $entityManager->flush();
+
+            $this->addFlash('success', $this->trans('Feature has been successfully deleted', 'Admin.Va_bulkfeaturemanager.Feature'));
+
+        }else{
+            $this->addFlash('error', $this->trans('This feature does not exist', 'Admin.Va_bulkfeaturemanager.Feature'));
+        }
+
+        return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
     }
 
 }
