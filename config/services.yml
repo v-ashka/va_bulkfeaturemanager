@@ -64,25 +64,7 @@ services:
       - '%database_prefix%'
 
 
-## unitfeatureconfiguration - form
-
-
-#form data provider
-  #1
-  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
-    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
-  #2
-
-  # data handler
-  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-    arguments:
-      - '@form.factory'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
-      - 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
-      - 'UnitFeatureConfiguration'
-
+## UnitfeatureConfiguration
 
 ## GridFeatureList
   prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory:
@@ -96,7 +78,6 @@ services:
     public: true
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - $dbPrefix: 'va_'
 
   prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -116,3 +97,25 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'gridFeatureList'
 
+  #form data provider
+
+  Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType:
+    class: Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+  #1
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
+
+  #2
+  # data handler
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
+      - 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType'
+      - 'BulkFeatureManager'

@@ -16,3 +16,8 @@ va_bulkfeaturemanager_search_feature:
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::searchAction'
 
+va_bulkfeaturemanager_add_feature:
+  path: va_bulkfeaturemanager/features/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::addNewFeatureAction'
