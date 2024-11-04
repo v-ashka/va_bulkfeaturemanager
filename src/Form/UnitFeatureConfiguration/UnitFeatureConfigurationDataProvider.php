@@ -35,4 +35,5 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
             'unit_feature_shortcut' => '',
         ];
     }
+
 }

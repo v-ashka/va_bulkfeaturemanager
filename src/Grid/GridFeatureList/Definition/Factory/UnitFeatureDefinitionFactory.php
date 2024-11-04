@@ -77,8 +77,8 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => "va_bulkfeaturemanager",
-                                'route_param_name' => "boxItemId",
+                                'route' => "va_bulkfeaturemanager_delete_feature",
+                                'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning')
                             ])
