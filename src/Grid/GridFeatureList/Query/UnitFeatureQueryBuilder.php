@@ -32,7 +32,7 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         ];
 
         $qb = $this->connection->createQueryBuilder();
-        $qb->from('va_unit_feature', 'uf');
+        $qb->from($this->dbPrefix . 'unit_feature', 'uf');
 
         foreach($filters as $name => $value){
             if(!in_array($name, $allowedFilters, true)){

@@ -32,7 +32,7 @@ class Installer {
             $databaseCollation = \Db::getInstance()->getValue('SELECT @@collation_database');
             $sqlLoader = new SqlLoader();
             $sqlLoader->setMetaData([
-                'PREFIX_' => 'va_',
+                'PREFIX_' => 'ps_',
                 'ENGINE_TYPE' => _MYSQL_ENGINE_,
                 'COLLATION' => (empty($databaseCollation) || !in_array($databaseCollation, $allowedCollations)) ? '' : 'COLLATE ' . $databaseCollation,
             ]);

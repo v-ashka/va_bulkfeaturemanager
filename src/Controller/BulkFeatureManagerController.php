@@ -173,6 +173,9 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         );
     }
 
+    public function editFeatureAction(Request $request, int $featureId){
+
+    }
     public function addNewFeatureAction(Request $request){
         $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler');
         $resForm = $res->getForm();
@@ -201,12 +204,12 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
                 $em->persist($unitFeature);
                 $em->flush();
 
-                $this->addFlash('success', $this->trans('Added new feature', 'Modules.Va_bulkfeaturemanager.Admin'));
+                $this->addFlash('success', $this->trans('A new feature has been successfully created ', 'Modules.Va_bulkfeaturemanager.Admin'));
             }else{
                 $this->addFlash('error', $errors);
-                return $this->redirectToRoute('va_bulkfeaturemanager_add_feature');
+                return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
             }
-
+            return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
 
         }
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/add_new_feature.html.twig', [
