@@ -15,15 +15,24 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
         $this->repository = $repository;
     }
 
+    //    get data and show them in form (edit)
     public function getData($featureId)
     {
         $feature = $this->repository->findOneById($featureId);
+        $unitFeature = [
+            'unit_feature_name' => $feature->getUnitFeatureName(),
+            'unit_feature_shortcut' => $feature->getUnitFeatureShortcut(),
+        ];
 
 
+        return $unitFeature;
     }
 
     public function getDefaultData()
     {
-        // TODO: Implement getDefaultData() method.
+        return [
+            'unit_feature_name' => '',
+            'unit_feature_shortcut' => '',
+        ];
     }
 }

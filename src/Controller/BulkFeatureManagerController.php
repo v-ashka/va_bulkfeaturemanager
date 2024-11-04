@@ -174,7 +174,23 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
     }
 
     public function editFeatureAction(Request $request, int $featureId){
+        $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
+        $unitFeatureForm = $unitFeatureBuilder->getFormFor($featureId);
+        $unitFeatureForm->handleRequest($request);
+            dump($unitFeatureForm);
+            dump($request);
+        $unitFeatureFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.form_handler');
+        $result = $unitFeatureFormHandler->handleFor($featureId, $unitFeatureForm);
 
+        if($result->isSubmitted() && $result->isValid()){
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Va_bulkfeaturemanager.Success'));
+
+            return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
+        }
+
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/feature-form.html.twig', [
+            'feature_form' => $unitFeatureForm->createView(),
+        ]);
     }
     public function addNewFeatureAction(Request $request){
         $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
@@ -212,7 +228,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
 
         }
-        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/add_new_feature.html.twig', [
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/feature-form.html.twig', [
             'enableSidebar' => true,
             'feature_form' => $resForm->createView(),
         ]);

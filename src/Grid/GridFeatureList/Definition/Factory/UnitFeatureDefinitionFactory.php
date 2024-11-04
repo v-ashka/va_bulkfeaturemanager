@@ -66,8 +66,8 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => "va_bulkfeaturemanager",
-                                'route_param_name' => "boxItemId",
+                                'route' => "va_bulkfeaturemanager_edit_feature",
+                                'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
                                 'clickable_row' => true,
                             ])
