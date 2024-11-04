@@ -3,8 +3,8 @@
 namespace Va_bulkfeaturemanager\Repository;
 
 use Va_bulkfeaturemanager\Entity\UnitFeature;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method UnitFeature|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,10 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method UnitFeature[] findAll()
  * @method UnitFeature[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UnitFeatureRepository extends ServiceEntityRepository
+class UnitFeatureRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, UnitFeature::class);
-    }
+
 }
