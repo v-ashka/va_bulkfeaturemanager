@@ -16,4 +16,5 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
     {
         return $data;
     }
+
 }
