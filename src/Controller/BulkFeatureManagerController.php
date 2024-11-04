@@ -6,6 +6,7 @@ namespace Va_bulkfeaturemanager\Controller;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
+use Va_bulkfeaturemanager\Entity\UnitFeature;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
@@ -170,6 +171,49 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             UnitFeatureDefinitionFactory::GRID_ID,
             'va_bulkfeaturemanager_features_list'
         );
+    }
+
+    public function addNewFeatureAction(Request $request){
+        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler');
+        $resForm = $res->getForm();
+        $resForm->handleRequest($request);
+        if($resForm->isSubmitted() && $resForm->isValid()){
+            $errors = [];
+            $formData = $resForm->getData();
+            $em = $this->container->get('doctrine.orm.entity_manager');
+
+
+            $unitFeature = new UnitFeature();
+
+            if($formData['unit_feature_name'] === null){
+                $errors['unit_feature_name'] = $this->trans('Feature name must be specified', 'Modules.Va_bulkfeaturemanager.Admin');
+            }
+
+            if($formData['unit_feature_shortcut'] === null){
+                $errors['unit_feature_shortcut'] = $this->trans('Feature shortcut must be specified', 'Modules.Va_bulkfeaturemanager.Admin');
+            }
+
+            if(empty($errors)){
+
+                $unitFeature->setUnitFeatureName($formData['unit_feature_name']);
+                $unitFeature->setUnitFeatureShortcut($formData['unit_feature_shortcut']);
+
+                $em->persist($unitFeature);
+                $em->flush();
+
+                $this->addFlash('success', $this->trans('Added new feature', 'Modules.Va_bulkfeaturemanager.Admin'));
+            }else{
+                $this->addFlash('error', $errors);
+                return $this->redirectToRoute('va_bulkfeaturemanager_add_feature');
+            }
+
+
+        }
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/add_new_feature.html.twig', [
+            'enableSidebar' => true,
+            'feature_form' => $resForm->createView(),
+        ]);
+
     }
 
 }
