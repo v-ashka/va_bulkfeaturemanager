@@ -1,20 +1,29 @@
 <?php
 
 namespace Va_bulkfeaturemanager\Form\UnitFeatureConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+
+use Va_bulkfeaturemanager\Entity\UnitFeature;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
+use Va_bulkfeaturemanager\Repository\UnitFeatureRepository;
 
 class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
 {
+    private $repository;
 
-    public function getData()
+    public function __construct(UnitFeatureRepository $repository)
     {
-
-        return [];
+        $this->repository = $repository;
     }
 
-    public function setData(array $data)
+    public function getData($featureId)
     {
-        return $data;
+        $feature = $this->repository->findOneById($featureId);
+
+
     }
 
+    public function getDefaultData()
+    {
+        // TODO: Implement getDefaultData() method.
+    }
 }
