@@ -1,9 +1,9 @@
 <?php
 
 namespace Va_bulkfeaturemanager\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use PrestaShop\Module\FacetedSearch\Hook\Product;
 use Va_bulkfeaturemanager\Repository\UnitFeatureRepository;
 
 /**
