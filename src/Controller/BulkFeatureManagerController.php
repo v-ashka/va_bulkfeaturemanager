@@ -177,7 +177,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
     }
     public function addNewFeatureAction(Request $request){
-        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_handler');
+        $res = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
         $resForm = $res->getForm();
         $resForm->handleRequest($request);
         if($resForm->isSubmitted() && $resForm->isValid()){
