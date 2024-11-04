@@ -21,3 +21,12 @@ va_bulkfeaturemanager_add_feature:
   methods: [GET, POST]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::addNewFeatureAction'
+
+
+va_bulkfeaturemanager_edit_feature:
+  path: va_bulkfeaturemanager/features/{featureId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::editFeatureAction'
+  requirements:
+    featureId: \d+
