@@ -30,3 +30,11 @@ va_bulkfeaturemanager_edit_feature:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::editFeatureAction'
   requirements:
     featureId: \d+
+
+va_bulkfeaturemanager_delete_feature:
+  path: va_bulkfeaturemanager/features/{featureId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteFeatureAction'
+  requirements:
+    featureId: \d+
