@@ -1,8 +1,9 @@
 <?php
 
+
 declare(strict_types=1);
 
-namespace Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory;
+namespace Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory;
 
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -18,11 +19,12 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
+class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 {
 
-    const GRID_ID = 'gridFeatureList';
-    const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureList';
+
+    const GRID_ID = 'gridFeatureValueList';
+    const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureValueList';
     protected function getId(): string
     {
         return self::GRID_ID;
@@ -30,48 +32,31 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getName(): string
     {
-        return $this->trans('Feature List', [], 'Modules.Va_bulkfeaturemanager.GridFeatureList');
+        return $this->trans('Feature value list', [], self::GRID_DOMAIN_TRANSLATOR);
     }
 
-    protected function getColumns()
-    {
+    protected function getColumns(){
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
-                    'bulk_field' => 'id_unit_feature'
+                    'bulk_field' => 'id_unit_feature_value'
                 ])
             )
-            ->add((new DataColumn('id_unit_feature'))
+            ->add((new DataColumn('id_unit_feature_value'))
                 ->setName($this->trans('ID', [], self::GRID_DOMAIN_TRANSLATOR))
                 ->setOptions([
-                    'field' => 'id_unit_feature'
+                    'field' => 'id_unit_feature_value'
                 ])
             )
-            ->add((new DataColumn('unit_feature_name'))
-                ->setName($this->trans('Feature name', [], self::GRID_DOMAIN_TRANSLATOR))
+            ->add((new DataColumn('value'))
+                ->setName($this->trans('ID', [], self::GRID_DOMAIN_TRANSLATOR))
                 ->setOptions([
-                    'field' => 'unit_feature_name'
-                ])
-            )
-            ->add((new DataColumn('unit_feature_shortcut'))
-                ->setName($this->trans('Feature shortcut', [], self::GRID_DOMAIN_TRANSLATOR))
-                ->setOptions([
-                    'field' => 'unit_feature_shortcut'
+                    'field' => 'value'
                 ])
             )
             ->add((new ActionColumn('actions'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new SubmitRowAction('show'))
-                            ->setName($this->trans('Show feature values', [], 'Admin.Actions'))
-                            ->setIcon('searchpin')
-                            ->setOptions([
-                                'method' => 'GET',
-                                'route' => "va_bulkfeaturemanager_feature_values",
-                                'route_param_name' => "featureId",
-                                'route_param_field' => "id_unit_feature",
-                            ])
-                        )
                         ->add((new SubmitRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
@@ -79,7 +64,7 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                                 'method' => 'DELETE',
                                 'route' => "va_bulkfeaturemanager_delete_feature",
                                 'route_param_name' => "featureId",
-                                'route_param_field' => "id_unit_feature",
+                                'route_param_field' => "id_unit_feature_value",
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning')
                             ])
                         )
@@ -89,7 +74,8 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setOptions([
                                 'route' => "va_bulkfeaturemanager_edit_feature",
                                 'route_param_name' => "featureId",
-                                'route_param_field' => "id_unit_feature",
+                                'route_param_field' => "id_unit_feature_value",
+//                                'clickable_row' => true,
                             ])
                         )
                 ])
@@ -99,35 +85,26 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getFilters()
     {
+
         return (new FilterCollection())
-            ->add((new Filter('id_unit_feature', TextType::class))
+            ->add((new Filter('id_unit_feature_value', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
                         'placeholder' => $this->trans('ID', [], 'Admin.Advparameters.Feature')
                     ]
                 ])
-                ->setAssociatedColumn('id_unit_feature')
+                ->setAssociatedColumn('id_unit_feature_value')
             )
-            ->add((new Filter('unit_feature_name', TextType::class))
+            ->add((new Filter('value', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Feature name', [], 'Admin.Advparameters.Feature')
+                        'placeholder' => $this->trans('Value', [], 'Admin.Advparameters.Feature')
                     ]
                 ])
-                ->setAssociatedColumn('unit_feature_name')
-            )
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setAssociatedColumn('actions')
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID
-                    ],
-                    'redirect_route' => 'va_bulkfeaturemanager_features_list',
-                ])
-            )
-            ;
+                ->setAssociatedColumn('value')
+            );
     }
+
 }

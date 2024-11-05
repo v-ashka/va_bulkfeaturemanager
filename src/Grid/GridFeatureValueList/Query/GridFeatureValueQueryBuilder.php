@@ -1,64 +1,55 @@
 <?php
-
-namespace Va_bulkfeaturemanager\Grid\GridFeatureList\Query;
+declare(strict_types=1);
+namespace Va_bulkfeaturemanager\Grid\GridFeatureValueList\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-
-
-class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
+class GridFeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     private $searchCriteriaApplicator;
 
     public function __construct(
         Connection $connection,
-        $dbPrefix,
+                   $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-    )
-    {
+    ){
         parent::__construct($connection, $dbPrefix);
-
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
-    private function getGridQueryBuilder(array $filters): QueryBuilder{
 
+    private function getGridQueryBuilder(array $filters){
         $allowedFilters = [
-            'id_unit_feature',
-            'unit_feature_name',
-            'unit_feature_shortcut'
+            'id_unit_feature_value',
+            'value'
         ];
 
         $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'unit_feature', 'uf');
+        $qb->from($this->dbPrefix . 'unit_feature_value', 'ufv');
 
-        foreach($filters as $name => $value){
+        foreach ($filters as $name => $value){
             if(!in_array($name, $allowedFilters, true)){
                 continue;
             }
 
-            if('id_unit_feature' === $name){
-                $qb->andWhere("uf.`id_unit_feature` = :id_unit_feature");
-                $qb->setParameter(":id_unit_feature", $value);
+            if('id_unit_feature_value' === $name){
+                $qb->andWhere("ufv.`id_unit_feature_value` = :id_unit_feature_value");
+                $qb->setParameter(':id_unit_feature_value', $value);
                 continue;
             }
 
             $qb->andWhere("$name LIKE :$name");
             $qb->setParameter($name, "%$value%");
         }
-
         return $qb;
     }
 
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
-
-        $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut')
-//            ->groupBy('uf.id_unit_feature')
-        ;
+        $qb->select('ufv.id_unit_feature_value', 'ufv.value');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -68,10 +59,10 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT uf.id_unit_feature)');
+        $qb->select('COUNT(DISTINCT ufv.id_unit_feature_value)');
 
         return $qb;
     }

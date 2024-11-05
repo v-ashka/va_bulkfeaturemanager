@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Entity\UnitFeature;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
+use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Filters\GridFeatureValueFilters;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
 
 class BulkFeatureManagerController extends FrameworkBundleAdminController{
@@ -145,7 +146,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             'layoutTitle' => $this->trans('Bulk Feature Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
 
             'bulkFeatureManagerForm' => $resForm->createView(),
-            'featureProductsGrid' => $this->presentGrid($featureProductsGrid)
+            'gridForm' => $this->presentGrid($featureProductsGrid)
 
         ]);
     }
@@ -158,7 +159,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Unit Feature Configuration', 'Modules.Va_bulkfeaturemanager.Admin'),
-            'featuresGrid' => $this->presentGrid($gridFeatureList),
+            'gridForm' => $this->presentGrid($gridFeatureList),
 
         ]);
     }
@@ -238,4 +239,13 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
     }
 
+    public function displayFeatureValuesAction(Request $request, GridFeatureValueFilters $filters)
+    {
+        $featureValueGridFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.factory');
+        $featureValueGrid = $featureValueGridFactory->getGrid($filters);
+
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
+           'gridForm' => $this->presentGrid($featureValueGrid)
+        ]);
+    }
 }

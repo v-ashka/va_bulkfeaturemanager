@@ -1,13 +1,12 @@
 <?php
 
-namespace Va_bulkfeaturemanager\Grid\GridFeatureList\Filters;
-
+namespace Va_bulkfeaturemanager\Grid\GridFeatureValueList\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
-
-class UnitFeatureFilters extends Filters
+use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory;
+class GridFeatureValueFilters extends Filters
 {
-    protected $filterId = UnitFeatureDefinitionFactory::GRID_ID;
+
+    protected $filterId = GridFeatureValueDefinitionFactory::GRID_ID;
 
     public static function getDefaults(): array
     {
