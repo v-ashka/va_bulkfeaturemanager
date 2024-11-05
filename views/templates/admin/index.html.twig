@@ -104,11 +104,12 @@ $(document).ready(function () {
       <div class="form-wrapper">
         {{ form_widget(bulkFeatureManagerForm) }}
       </div>
-      <div class="row w-75 mx-auto">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': featureProductsGrid} %}
-        </div>
-      </div>
+{#      <div class="row w-75 mx-auto">#}
+{#        <div class="col">#}
+{#          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': featureProductsGrid} %}#}
+{#        </div>#}
+{#      </div>#}
+      {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid.html.twig' %}
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">

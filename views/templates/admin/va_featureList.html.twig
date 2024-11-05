@@ -36,11 +36,12 @@
   <div class="card">
     <div class="card-body">
       {% block featurelist_panel %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featuresGrid} %}
-        </div>
-      </div>
+{#      <div class="row">#}
+{#        <div class="col">#}
+{#          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featuresGrid} %}#}
+{#        </div>#}
+{#      </div>#}
+        {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid.html.twig' %}
       {% endblock %}
     </div>
   </div>
