@@ -43,7 +43,7 @@ va_bulkfeaturemanager_delete_feature:
 
 va_bulkfeaturemanager_feature_values:
   path: va_bulkfeaturemanager/feature/{featureId}/values
-  methods: GET|POST
+  methods: [GET,POST]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayFeatureValuesAction'
     requirements:

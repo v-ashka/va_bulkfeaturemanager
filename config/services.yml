@@ -155,6 +155,7 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
+
   prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     public: true

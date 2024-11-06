@@ -242,10 +242,17 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
     public function displayFeatureValuesAction(Request $request, GridFeatureValueFilters $filters)
     {
         $featureValueGridFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.factory');
-        $featureValueGrid = $featureValueGridFactory->getGrid($filters);
+        $queryBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.query.gridfeaturevaluequerybuilder');
+//        get feature id from featureForm request
+        $featureId = $request->attributes->get('featureId');
+//        set feature id to display exact feature values
+        $queryBuilder->setFeatureId((int) $featureId);
 
+
+        $featureValueGrid = $featureValueGridFactory->getGrid($filters);
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
-           'gridForm' => $this->presentGrid($featureValueGrid)
+           'gridForm' => $this->presentGrid($featureValueGrid),
+           'layoutTitle' => $this->trans('Feature %feature_name% configuration', 'Modules.Va_bulkfeaturemanager.Admin', ['%feature_name%' => 'test']),
         ]);
     }
 }

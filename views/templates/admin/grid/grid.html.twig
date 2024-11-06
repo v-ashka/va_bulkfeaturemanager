@@ -1,11 +1,13 @@
- <div
-   class="
-   {% if app.request.pathInfo == '/modules/va_bulkfeaturemanager/configuration' %}
-   mx-auto w-75
-   {% endif %}
-   row">
-
+{% if app.request.pathInfo == '/modules/va_bulkfeaturemanager/configuration' %}
+<div class="mx-auto w-75 row">
   <div class="col">
     {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': gridForm} %}
   </div>
 </div>
+{% else %}
+<div class="row">
+  <div class="col">
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': gridForm} %}
+  </div>
+</div>
+{% endif %}

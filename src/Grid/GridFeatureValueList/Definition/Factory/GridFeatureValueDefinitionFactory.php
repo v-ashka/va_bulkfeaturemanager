@@ -25,6 +25,7 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 
     const GRID_ID = 'gridFeatureValueList';
     const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureValueList';
+
     protected function getId(): string
     {
         return self::GRID_ID;
@@ -34,6 +35,7 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return $this->trans('Feature value list', [], self::GRID_DOMAIN_TRANSLATOR);
     }
+
 
     protected function getColumns(){
         return (new ColumnCollection())
@@ -49,7 +51,7 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new DataColumn('value'))
-                ->setName($this->trans('ID', [], self::GRID_DOMAIN_TRANSLATOR))
+                ->setName($this->trans('Featue value', [], self::GRID_DOMAIN_TRANSLATOR))
                 ->setOptions([
                     'field' => 'value'
                 ])

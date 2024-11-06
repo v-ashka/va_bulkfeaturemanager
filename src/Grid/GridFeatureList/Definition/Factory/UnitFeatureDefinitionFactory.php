@@ -66,7 +66,6 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Show feature values', [], 'Admin.Actions'))
                             ->setIcon('searchpin')
                             ->setOptions([
-                                'method' => 'GET',
                                 'route' => "va_bulkfeaturemanager_feature_values",
                                 'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
@@ -90,6 +89,7 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => "va_bulkfeaturemanager_edit_feature",
                                 'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
+
                             ])
                         )
                 ])
