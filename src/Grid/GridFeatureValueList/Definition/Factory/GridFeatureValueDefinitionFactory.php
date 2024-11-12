@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory;
 
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -18,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -25,6 +28,16 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 
     const GRID_ID = 'gridFeatureValueList';
     const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureValueList';
+    /**
+     * @var Request
+     */
+    private $featureId;
+
+    public function __construct(Request $request, HookDispatcherInterface $hookDispatcher = null)
+    {
+        parent::__construct($hookDispatcher);
+        $this->request = $request;
+    }
 
     protected function getId(): string
     {
@@ -34,6 +47,11 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getName(): string
     {
         return $this->trans('Feature value list', [], self::GRID_DOMAIN_TRANSLATOR);
+    }
+
+    protected function setFeatureId($featureId = 1)
+    {
+        return $this->featureId = $featureId;
     }
 
 
@@ -64,8 +82,8 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => "va_bulkfeaturemanager_delete_feature",
-                                'route_param_name' => "featureId",
+                                'route' => "va_bulkfeaturemanager_feature_value_delete",
+                                'route_param_name' => "featureValueId",
                                 'route_param_field' => "id_unit_feature_value",
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning')
                             ])
@@ -74,8 +92,8 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => "va_bulkfeaturemanager_edit_feature",
-                                'route_param_name' => "featureId",
+                                'route' => "va_bulkfeaturemanager_feature_value_edit",
+                                'route_param_name' => "featureValueId",
                                 'route_param_field' => "id_unit_feature_value",
 //                                'clickable_row' => true,
                             ])
@@ -106,7 +124,23 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                     ]
                 ])
                 ->setAssociatedColumn('value')
-            );
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'va_bulkfeaturemanager_feature_values',
+                    'redirect_route_params' => [
+                        'featureId' => $this->featureId
+                    ]
+
+                ])
+            )
+            ;
     }
+
 
 }

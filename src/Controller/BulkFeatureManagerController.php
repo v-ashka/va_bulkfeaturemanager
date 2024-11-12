@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Entity\UnitFeature;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
+use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Filters\GridFeatureValueFilters;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
 
@@ -175,6 +176,9 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         );
     }
 
+
+
+
     public function editFeatureAction(Request $request, int $featureId){
         $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
         $unitFeatureForm = $unitFeatureBuilder->getFormFor($featureId);
@@ -194,6 +198,8 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             'feature_form' => $unitFeatureForm->createView(),
         ]);
     }
+
+
     public function addNewFeatureAction(Request $request){
         $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
         $featureForm = $unitFeatureBuilder->getForm();
@@ -239,6 +245,8 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
     }
 
+
+
     public function displayFeatureValuesAction(Request $request, GridFeatureValueFilters $filters)
     {
         $featureValueGridFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.factory');
@@ -254,5 +262,29 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
            'gridForm' => $this->presentGrid($featureValueGrid),
            'layoutTitle' => $this->trans('Feature %feature_name% configuration', 'Modules.Va_bulkfeaturemanager.Admin', ['%feature_name%' => 'test']),
         ]);
+    }
+
+    // search feature value action
+    public function searchFeatureValueAction(Request $request){
+//        dd($request->attributes);
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+//        dd($responseBuilder, (int) $request->attributes->get('featureId'), $request->query);
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.definition.factory.gridfeaturevaluedefinitionfactory'),
+            $request,
+            GridFeatureValueDefinitionFactory::GRID_ID,
+           'va_bulkfeaturemanager_feature_values',
+            ['featureId']
+        );
+    }
+
+    public function editFeatureValueAction(Request $request, int $featureValueId)
+    {
+        $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
+    }
+
+    public function deleteFeatureValue(int $featureValueId)
+    {
     }
 }
