@@ -8,6 +8,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -55,10 +59,11 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
                 'field' => 'feature_id_name',
             ])
             )
+
             ;
 
     }
-//
+
     protected function getBulkActions(){
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('action_feature'))

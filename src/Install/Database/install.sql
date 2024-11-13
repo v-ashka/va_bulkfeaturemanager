@@ -21,7 +21,7 @@ CREATE TABLE PREFIX_unit_feature_product (
                                     id_unit_feature INT NOT NULL,
                                     id_unit_feature_value INT NOT NULL,
                                     id_product INT NOT NULL,
-                                    id_product_attribute INT NOT NULL,
+                                    id_product_attribute INT DEFAULT NULL,
                                     id_attribute_group INT DEFAULT NULL,
                                     CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature FOREIGN KEY (id_unit_feature)
                                       REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE,

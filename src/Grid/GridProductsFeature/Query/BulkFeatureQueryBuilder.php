@@ -22,13 +22,11 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-//            ->select('p.id_product, pl.name, pc.name as category, fl.name as feature_id_name')
             ->select('p.id_product, pl.name, pc.name as category')
             ->addSelect("(
-        SELECT GROUP_CONCAT(DISTINCT fl.name ORDER BY fl.id_feature ASC SEPARATOR ', ')
-        FROM " . $this->dbPrefix . "feature_product fp
-        LEFT JOIN " . $this->dbPrefix . "feature_lang fl ON fp.id_feature = fl.id_feature
-        WHERE fp.id_product = p.id_product) AS feature_id_name")
+        SELECT DISTINCT uf.unit_feature_name FROM " . $this->dbPrefix . "unit_feature uf
+        LEFT JOIN " . $this->dbPrefix . "unit_feature_product ufp ON ufp.id_unit_feature = uf.id_unit_feature
+        WHERE ufp.id_product = p.id_product LIMIT 1) AS feature_id_name")
 //            ->select('p.id_product, pl.name, pc.name as category')
             ->groupBy('p.id_product')
             ->addGroupBy('pl.name')
@@ -54,24 +52,12 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
     }
 
     public function getQueryBuilder(){
-//        $allowedFilter = [
-//            'id_product',
-//            'name',
-//            'category',
-//        ];
-
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix.'product', 'p')
             ->innerJoin('p', $this->dbPrefix.'product_lang', 'pl', 'p.id_product = pl.id_product')
-//            ps_category_lang(id_category, name)
             ->leftJoin('p', $this->dbPrefix.'category_lang', 'pc', 'p.id_category_default = pc.id_category')
-//            ps_feature_product(id_feature, id_product, id_feature_value)
-//            ->leftJoin('p', $this->dbPrefix.'feature_product', 'fp', 'p.id_product = fp.id_product')
-////            ps_feature_lang(id_feature, name)
-//            ->rightJoin('fp', $this->dbPrefix.'feature_lang', 'fl', 'fp.id_feature = fl.id_feature')
-////            ps_feature_value_lang (id_feature_value, value)
-//            ->leftJoin('fp', $this->dbPrefix.'feature_value_lang', 'fvl', 'fp.id_feature_value = fvl.id_feature_value')
+
             ;
 
         return $qb;

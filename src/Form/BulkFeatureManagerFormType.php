@@ -42,15 +42,18 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
         ;
     }
 
-    public function getFeatures(): array{
+
+
+    protected function getFeatures(){
         $features = [];
-        $sql = "SELECT pf.id_feature, pf_lang.name from ps_feature pf INNER JOIN  ps_feature_lang pf_lang ON pf_lang.id_feature = pf.id_feature";
+        $sql = "SELECT id_unit_feature, unit_feature_name FROM " . _DB_PREFIX_ . "unit_feature";
         $res = Db::getInstance()->executeS($sql);
 
         foreach($res as $row){
-            $rowName = $row['name']  . ' (id feature: ' . $row['id_feature']. ')';
-            $features[$rowName] = $row['id_feature'];
+            $rowName = $row['unit_feature_name'] . ' (id:'.$row['id_unit_feature'] .' )';
+            $features[$rowName] = $row['id_unit_feature'];
         }
+
         return $features;
     }
 
@@ -62,14 +65,14 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
     private function getFeatureValues(bool $insertFeatureId = false): array
     {
         $featureVals = [];
-        $sql = "SELECT pf.id_feature, pf_val.id_feature_value, pf_val_lang.value from ps_feature pf INNER JOIN  ps_feature_lang pf_lang ON pf_lang.id_feature = pf.id_feature INNER JOIN ps_feature_value pf_val ON pf_val.id_feature = pf.id_feature INNER JOIN ps_feature_value_lang pf_val_lang ON pf_val_lang.id_feature_value = pf_val.id_feature_value";
+        $sql = "SELECT ufv.id_unit_feature_value, ufv.id_unit_feature, ufv.value, uf.unit_feature_shortcut FROM " . _DB_PREFIX_. "unit_feature_value ufv INNER JOIN "._DB_PREFIX_. "unit_feature uf ON uf.id_unit_feature = ufv.id_unit_feature" ;
         $res = Db::getInstance()->executeS($sql);
 
         foreach($res as $row){
-            $rowName = $row['value'] . ' (id: ' . $row['id_feature_value']. ')';
-            $featureVals[$rowName] = $row['id_feature_value'];
+            $rowName = $row['value'] .' '. $row['unit_feature_shortcut'] .' (id: ' . $row['id_unit_feature_value']. ')';
+            $featureVals[$rowName] = $row['id_unit_feature'];
             if($insertFeatureId){
-                $featureVals[$rowName] = array('data-feature_id' => $row['id_feature']);
+                $featureVals[$rowName] = array('data-feature_id' => $row['id_unit_feature']);
             }
 
         }
@@ -77,4 +80,3 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
         return $featureVals;
     }
 }
-//SELECT pf.id_feature, pf_lang.name, pf_val.id_feature_value, pf_val_lang.value from ps_feature pf INNER JOIN  ps_feature_lang pf_lang ON pf_lang.id_feature = pf.id_feature INNER JOIN ps_feature_value pf_val ON pf_val.id_feature = pf.id_feature INNER JOIN ps_feature_value_lang pf_val_lang ON pf_val_lang.id_feature_value = pf_val.id_feature_value

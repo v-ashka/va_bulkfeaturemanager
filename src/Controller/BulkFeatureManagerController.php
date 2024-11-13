@@ -12,6 +12,7 @@ use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDef
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Filters\GridFeatureValueFilters;
+use Va_bulkfeaturemanager\Grid\GridProductsFeature\Factory\BulkFeatureManagerGridDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
 use Va_bulkfeaturemanager\Repository\UnitFeatureRepository;
 
@@ -63,7 +64,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
                         }else{
                             $this->addFlash('error',
                                 $this->trans(
-                                    'The selected products already have this feature',
+                                    'The selected products already have any feature',
                                     'Modules.Va_bulkfeaturemanager.Admin')
                             );
                         }
@@ -151,6 +152,17 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             'gridForm' => $this->presentGrid($featureProductsGrid)
 
         ]);
+    }
+
+    public function configurationSearchGrid(Request $request){
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.module.va_bulkfeaturemanager.grid.bulkfeaturemanager.grid_definition_factory'),
+            $request,
+            BulkFeatureManagerGridDefinitionFactory::GRID_ID,
+            'va_bulkfeaturemanager'
+        );
     }
 
     public function indexAction(UnitFeatureFilters $filters)
