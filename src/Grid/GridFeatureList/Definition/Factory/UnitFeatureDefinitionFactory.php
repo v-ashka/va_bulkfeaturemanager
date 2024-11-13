@@ -69,6 +69,7 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => "va_bulkfeaturemanager_feature_values",
                                 'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
+
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))
@@ -89,7 +90,6 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => "va_bulkfeaturemanager_edit_feature",
                                 'route_param_name' => "featureId",
                                 'route_param_field' => "id_unit_feature",
-
                             ])
                         )
                 ])

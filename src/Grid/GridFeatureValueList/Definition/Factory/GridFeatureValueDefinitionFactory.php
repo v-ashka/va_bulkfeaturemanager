@@ -47,6 +47,10 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
         return $this->featureId = $featureId;
     }
 
+    public function getFeatureId(){
+        return $this->featureId;
+    }
+
 
     protected function getColumns(){
         return (new ColumnCollection())
@@ -130,6 +134,18 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                         'featureId' => $this->featureId
                     ]
 
+                ])
+            )
+            ;
+    }
+
+    protected function getBulkActions(){
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('action_feature'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'submit_route' => 'va_bulkfeaturemanager_feature_value_delete_bulk',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Advparameters.Feature')
                 ])
             )
             ;

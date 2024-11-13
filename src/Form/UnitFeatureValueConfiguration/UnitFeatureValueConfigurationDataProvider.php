@@ -19,9 +19,10 @@ class UnitFeatureValueConfigurationDataProvider implements FormDataProviderInter
     {
        $featureValue = $this->featureValueRepository->findOneById($featureValueId);
 
+
        return
        [
-           'unit_feature_id' => $featureValue->getUnitFeature(),
+           'unit_feature_id' => $featureValue->getUnitFeature()->getId(),
            'unit_feature_value' => $featureValue->getValue(),
        ];
     }
