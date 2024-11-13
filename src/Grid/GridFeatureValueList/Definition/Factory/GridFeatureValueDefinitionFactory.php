@@ -20,7 +20,6 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Request;
 
 class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -33,12 +32,6 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $featureId;
 
-    public function __construct(Request $request, HookDispatcherInterface $hookDispatcher = null)
-    {
-        parent::__construct($hookDispatcher);
-        $this->request = $request;
-    }
-
     protected function getId(): string
     {
         return self::GRID_ID;
@@ -49,7 +42,7 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
         return $this->trans('Feature value list', [], self::GRID_DOMAIN_TRANSLATOR);
     }
 
-    protected function setFeatureId($featureId = 1)
+    public function setFeatureId($featureId = 1)
     {
         return $this->featureId = $featureId;
     }
