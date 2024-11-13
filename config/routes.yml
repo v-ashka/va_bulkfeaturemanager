@@ -81,3 +81,9 @@ va_bulkfeaturemanager_feature_value_delete:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteFeatureValue'
     requirements:
       featureValueId: \d+
+#featureUnitValue delete bulk
+va_bulkfeaturemanager_feature_value_delete_bulk:
+  path: va_bulkfeaturemanager/feature/value
+  methods: POST
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteBulkFeatureValue'
