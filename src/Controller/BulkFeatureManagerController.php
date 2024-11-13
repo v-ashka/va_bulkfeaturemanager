@@ -13,6 +13,7 @@ use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Filters\GridFeatureValueFilters;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
+use Va_bulkfeaturemanager\Repository\UnitFeatureRepository;
 
 class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
@@ -256,7 +257,9 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
 //        set feature id to display exact feature values
         $queryBuilder->setFeatureId((int) $featureId);
 
+        $featureValueDefinitionFactory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.definition.factory.gridfeaturevaluedefinitionfactory');
 
+        $featureValueDefinitionFactory->setFeatureId($featureId);
         $featureValueGrid = $featureValueGridFactory->getGrid($filters);
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/va_featureList.html.twig', [
            'gridForm' => $this->presentGrid($featureValueGrid),
@@ -279,6 +282,33 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         );
     }
 
+    public function addNewFeatureValueAction(Request $request){
+        $unitFeatureValueBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.builder.formbuilder');
+        $featureValueForm = $unitFeatureValueBuilder->getForm();
+        $featureValueForm->handleRequest($request);
+
+
+        $featureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
+        $result = $featureValueFormHandler->handle($featureValueForm);
+
+        if($result->isValid() && $result->isSubmitted() && $result->getIdentifiableObjectId() !== null ){
+            $featureName = $this->getFeatureName($featureValueForm->getData()['unit_feature_id']);
+
+            $this->addFlash('success',  $this->trans('A new feature value has been successfully created (Added to feature named: %feature_name% id: %feature_id%)', 'Admin.Va_bulkfeaturemanager.Feature', ['%feature_id%' => $featureValueForm->getData()['unit_feature_id'], '%feature_name%' => $featureName]));
+            return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
+        }
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/feature-form.html.twig', [
+            'enableSidebar' => true,
+            'feature_form' => $featureValueForm->createView(),
+        ]);
+    }
+
+    public function getFeatureName($featureId){
+        $featureRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository');
+        $feature = $featureRepository->findOneById($featureId);
+        return $feature->getUnitFeatureName() !== null ? $feature->getUnitFeatureName() : $this->trans('Feature name not found', 'Admin.Va_bulkfeaturemanager.FeatureValueConfiguration');
+
+    }
     public function editFeatureValueAction(Request $request, int $featureValueId)
     {
         $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');

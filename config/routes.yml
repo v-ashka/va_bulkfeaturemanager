@@ -58,6 +58,13 @@ va_bulkfeaturemanager_feature_value_search:
   requirements:
       featureId: \d+
 
+#featureUnit add
+va_bulkfeaturemanager_add_feature_value:
+  path: va_bulkfeaturemanager/feature/value/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::addNewFeatureValueAction'
+
 #featureUnitValue edit
 va_bulkfeaturemanager_feature_value_edit:
   path: va_bulkfeaturemanager/feature/value/{featureValueId}/edit
