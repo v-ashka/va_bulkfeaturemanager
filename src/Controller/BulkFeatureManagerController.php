@@ -311,10 +311,69 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
     }
     public function editFeatureValueAction(Request $request, int $featureValueId)
     {
-        $unitFeatureBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder');
+        $unitFeatureValueBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.builder.formbuilder');
+        $unitFeatureValueForm = $unitFeatureValueBuilder->getFormFor($featureValueId);
+
+        $unitFeatureValueForm->handleRequest($request);
+
+        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
+        $result = $unitFeatureValueFormHandler->handleFor($featureValueId, $unitFeatureValueForm);
+
+        if($result->isSubmitted() && $result->isValid()){
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Va_bulkfeaturemanager.Success'));
+
+            return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $unitFeatureValueForm->getData()['unit_feature_id']]);
+        }
+
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/feature/feature-form.html.twig', [
+            'feature_form' => $unitFeatureValueForm->createView(),
+        ]);
     }
 
     public function deleteFeatureValue(int $featureValueId)
     {
+        $repository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository');
+        try{
+            $feature = $repository->findOneById($featureValueId);
+        } catch (EntityNotFoundException $e){
+            $feature = null;
+        }
+
+        if(null !== $feature){
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $entityManager->remove($feature);
+            $entityManager->flush();
+
+            $this->addFlash('success', $this->trans('Feature value has been successfully deleted', 'Admin.Va_bulkfeaturemanager.Feature'));
+
+        }else{
+            $this->addFlash('error', $this->trans('This feature value does not exist', 'Admin.Va_bulkfeaturemanager.Feature'));
+        }
+
+        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $feature->getUnitFeature()->getId()]);
+
+    }
+
+    public function deleteBulkFeatureValue(Request $request){
+        $featureValueIds = $request->request->get('gridFeatureValueList_bulk');
+        $repository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository');
+
+        try{
+            $featuresValue = $repository->findById($featureValueIds);
+        } catch (EntityNotFoundException $e){
+            $featuresValue = null;
+        }
+
+        if(!empty($featuresValue)){
+            $em = $this->get('doctrine.orm.entity_manager');
+            foreach($featuresValue as $featureValueId){
+
+                $em->remove($featureValueId);
+            }
+            $em->flush();
+            $this->addFlash('success', $this->trans('Successful delete', 'Admin.Va_bulkfeaturemanager.Feature'));
+        }
+
+        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $feature->getUnitFeature()->getId()]);
     }
 }
