@@ -28,7 +28,8 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         $allowedFilters = [
             'id_unit_feature',
             'unit_feature_name',
-            'unit_feature_shortcut'
+            'unit_feature_shortcut',
+            'unit_feature_base_value'
         ];
 
         $qb = $this->connection->createQueryBuilder();
@@ -56,7 +57,7 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
 
-        $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut')
+        $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut, uf.unit_feature_base_value')
 //            ->groupBy('uf.id_unit_feature')
         ;
 

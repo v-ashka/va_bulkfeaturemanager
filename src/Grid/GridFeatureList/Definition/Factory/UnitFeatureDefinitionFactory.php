@@ -59,6 +59,12 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'unit_feature_shortcut'
                 ])
             )
+            ->add((new DataColumn('unit_feature_base_value'))
+                ->setName($this->trans('Base value', [], self::GRID_DOMAIN_TRANSLATOR))
+                ->setOptions([
+                    'field' => 'unit_feature_base_value'
+                ])
+            )
             ->add((new ActionColumn('actions'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
@@ -118,6 +124,24 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('unit_feature_name')
             )
+            ->add((new Filter('unit_feature_shortcut', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Feature shortcut', [], 'Admin.Advparameters.Feature')
+                    ]
+                ])
+                ->setAssociatedColumn('unit_feature_shortcut')
+            )
+            ->add((new Filter('unit_feature_base_value', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Base value', [], 'Admin.Advparameters.Feature')
+                    ]
+                ])
+                ->setAssociatedColumn('unit_feature_base_value')
+            )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
@@ -128,6 +152,7 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
                     'redirect_route' => 'va_bulkfeaturemanager_features_list',
                 ])
             )
+
             ;
     }
 }

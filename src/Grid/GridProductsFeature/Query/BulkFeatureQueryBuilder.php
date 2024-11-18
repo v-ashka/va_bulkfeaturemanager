@@ -22,12 +22,11 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('p.id_product, pl.name, pc.name as category')
+            ->select('p.id_product, pl.name, pc.name as category, ufv.value as feature_value')
             ->addSelect("(
         SELECT DISTINCT uf.unit_feature_name FROM " . $this->dbPrefix . "unit_feature uf
         LEFT JOIN " . $this->dbPrefix . "unit_feature_product ufp ON ufp.id_unit_feature = uf.id_unit_feature
         WHERE ufp.id_product = p.id_product LIMIT 1) AS feature_id_name")
-//            ->select('p.id_product, pl.name, pc.name as category')
             ->groupBy('p.id_product')
             ->addGroupBy('pl.name')
             ->addGroupBy('pc.name')
@@ -57,7 +56,8 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
             ->from($this->dbPrefix.'product', 'p')
             ->innerJoin('p', $this->dbPrefix.'product_lang', 'pl', 'p.id_product = pl.id_product')
             ->leftJoin('p', $this->dbPrefix.'category_lang', 'pc', 'p.id_category_default = pc.id_category')
-
+            ->leftJoin('p', $this->dbPrefix. 'unit_feature_product', 'ufp', 'p.id_product = ufp.id_product')
+            ->leftJoin('ufp', $this->dbPrefix . 'unit_feature_value', 'ufv', 'ufp.id_unit_feature_value = ufv.id_unit_feature_value')
             ;
 
         return $qb;
