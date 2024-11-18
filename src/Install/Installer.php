@@ -43,7 +43,8 @@ class Installer {
         private function registerHooks(\Module $module): bool{
             $hooks = [
                 'actionFrontControllerSetMedia',
-                'displayFrontFeatureInfo'
+//                'displayFrontFeatureInfo',
+                'displayProductAdditionalInfo'
             ];
             return (bool) $module->registerHook($hooks);
         }

@@ -3,37 +3,38 @@ CREATE TABLE PREFIX_unit_feature (
                                    id_unit_feature INT AUTO_INCREMENT NOT NULL,
                                    unit_feature_name VARCHAR(64) NOT NULL,
                                    unit_feature_shortcut VARCHAR(64) NOT NULL,
+                                   unit_feature_base_value INT(128) NOT NULL,
                                    PRIMARY KEY(id_unit_feature)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- va_unit_feature_value
 CREATE TABLE PREFIX_unit_feature_value (
-                                  id_unit_feature_value INT AUTO_INCREMENT NOT NULL,
-                                  id_unit_feature INT NOT NULL,
-                                  value VARCHAR(64) NOT NULL,
-                                  PRIMARY KEY(id_unit_feature_value),
-                                  CONSTRAINT FK_PREFIX_unit_feature_value_unit_feature FOREIGN KEY (id_unit_feature)
-                                    REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE
+                                         id_unit_feature_value INT AUTO_INCREMENT NOT NULL,
+                                         id_unit_feature INT NOT NULL,
+                                         value VARCHAR(64) NOT NULL,
+                                         PRIMARY KEY(id_unit_feature_value),
+                                         CONSTRAINT FK_PREFIX_unit_feature_value_unit_feature FOREIGN KEY (id_unit_feature)
+                                           REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- va_unit_feature_product table
 CREATE TABLE PREFIX_unit_feature_product (
-                                    id_unit_feature INT NOT NULL,
-                                    id_unit_feature_value INT NOT NULL,
-                                    id_product INT NOT NULL,
-                                    id_product_attribute INT DEFAULT NULL,
-                                    id_attribute_group INT DEFAULT NULL,
-                                    CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature FOREIGN KEY (id_unit_feature)
-                                      REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE,
-                                    CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature_value FOREIGN KEY (id_unit_feature_value)
-                                      REFERENCES PREFIX_unit_feature_value(id_unit_feature_value) ON DELETE CASCADE
+                                           id_unit_feature INT NOT NULL,
+                                           id_unit_feature_value INT NOT NULL,
+                                           id_product INT NOT NULL,
+                                           id_product_attribute INT DEFAULT NULL,
+                                           id_attribute_group INT DEFAULT NULL,
+                                           CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature FOREIGN KEY (id_unit_feature)
+                                             REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE,
+                                           CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature_value FOREIGN KEY (id_unit_feature_value)
+                                             REFERENCES PREFIX_unit_feature_value(id_unit_feature_value) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO PREFIX_unit_feature (id_unit_feature, unit_feature_name, unit_feature_shortcut) VALUES
-                                                                                              (1, 'Waga', 'kg'),
-                                                                                              (2, 'Pojemność', 'l'),
-                                                                                              (3, 'Ilość', 'szt');
-
+-- Wstawianie danych do PREFIX_unit_feature z nową kolumną unit_feature_base_value
+INSERT INTO PREFIX_unit_feature (id_unit_feature, unit_feature_name, unit_feature_shortcut, unit_feature_base_value) VALUES
+                                                                                                                       (1, 'Waga', 'kg', 1),
+                                                                                                                       (2, 'Pojemność', 'l', 1000),
+                                                                                                                       (3, 'Ilość', 'szt', 1);
 
 -- Wartości dla Waga (id_unit_feature = 1)
 INSERT INTO PREFIX_unit_feature_value (id_unit_feature, value) VALUES
@@ -60,4 +61,3 @@ INSERT INTO PREFIX_unit_feature_product (id_unit_feature, id_unit_feature_value,
                                                                                                                      (2, 3, 2, 10),
                                                                                                                      (3, 5, 3, 1),
                                                                                                                      (1, 7, 4, 1);
-
