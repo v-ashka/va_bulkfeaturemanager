@@ -29,7 +29,8 @@ class UnitFeatureDataHandler implements FormDataHandlerInterface
         $unitFeature = new UnitFeature();
         $unitFeature->setUnitFeatureName($data['unit_feature_name']);
         $unitFeature->setUnitFeatureShortcut($data['unit_feature_shortcut']);
-
+        $unitFeature->setUnitFeatureBaseValue((int) $data['unit_feature_base_value']);
+//    dd($unitFeature);
         $this->entityManager->persist($unitFeature);
         $this->entityManager->flush();
 
@@ -41,6 +42,7 @@ class UnitFeatureDataHandler implements FormDataHandlerInterface
         $unitFeature = $this->unitFeatureRepository->findOneById($id);
         $unitFeature->setUnitFeatureName($data['unit_feature_name']);
         $unitFeature->setUnitFeatureShortcut($data['unit_feature_shortcut']);
+        $unitFeature->setUnitFeatureBaseValue((int) $data['unit_feature_base_value']);
 
         $this->entityManager->persist($unitFeature);
         $this->entityManager->flush();

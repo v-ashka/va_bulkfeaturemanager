@@ -22,6 +22,7 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
         $unitFeature = [
             'unit_feature_name' => $feature->getUnitFeatureName(),
             'unit_feature_shortcut' => $feature->getUnitFeatureShortcut(),
+            'unit_feature_base_value' => $feature->getUnitFeatureBaseValue(),
         ];
 
 
@@ -33,6 +34,7 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
         return [
             'unit_feature_name' => '',
             'unit_feature_shortcut' => '',
+            'unit_feature_base_value' => '',
         ];
     }
 

@@ -69,8 +69,8 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
         $res = Db::getInstance()->executeS($sql);
 
         foreach($res as $row){
-            $rowName = $row['value'] .' '. $row['unit_feature_shortcut'] .' (id: ' . $row['id_unit_feature_value']. ')';
-            $featureVals[$rowName] = $row['id_unit_feature'];
+            $rowName = $row['value'] .' (id: ' . $row['id_unit_feature_value']. ' | '. $row['unit_feature_shortcut'] .' )';
+            $featureVals[$rowName] = $row['id_unit_feature_value'];
             if($insertFeatureId){
                 $featureVals[$rowName] = array('data-feature_id' => $row['id_unit_feature']);
             }
