@@ -93,9 +93,45 @@ class Va_bulkfeaturemanager extends Module
         return $installer->uninstall($this);
     }
 
+    public function hookDisplayProductAdditionalInfo($params){
+        $bulkFeatureManagerService = $this->get('prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service');
+        $productId = Tools::getValue('id_product');
+        $productAttribute = Tools::getValue('id_product_attribute');
+        $productFeatures = [];
+        if($productAttribute){
+//            TODO product attribute get feature
+                $productAttribute = [];
+//            $productFeatures = $bulkFeatureManagerService->getFeatureByProductAttributeId((int) $params['product']->id_product_attribute);
+        }else{
+            $productFeatures = $bulkFeatureManagerService->getFeatureByProductId((int) $productId);
+        }
+
+        if($productFeatures){
+            $productPrice = Product::getPriceStatic($productId);
+            $calculatedPrice = $this->calculateProductBaseValue(
+                (float) $productFeatures[0]['unit_feature_base_value'],
+                (float) $productFeatures[0]['value'],
+                (float) $productPrice);
+            $this->smarty->assign([
+                'feature_shortcut' => $productFeatures[0]['unit_feature_shortcut'],
+                'feature_base_value' => $productFeatures[0]['unit_feature_base_value'],
+                'currency' => $this->context->currency->symbol,
+                'calculated_price' => $calculatedPrice
+            ]);
+            return $this->fetch('module:va_bulkfeaturemanager/views/templates/front/featureinfo.tpl');
+        }
+
+    }
+
+    public function calculateProductBaseValue( float $baseValue, float $featureValue, float $price){
+        $result = ($price * $baseValue) / $featureValue;
+//        dump($result, $price, $baseValue, $featureValue);
+        return number_format($result, 2, '.', '');
+    }
     public function hookDisplayFrontFeatureInfo($params){
         $bulkFeatureManagerService = $this->get('prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service');
         $productId = Tools::getValue('id_product');
+
         $productFeatures = $bulkFeatureManagerService->getFeatureByProductId($productId);
 //
 //            $specialFeature = $this->extractSpecialFeature(3, $productFeatures, true);
