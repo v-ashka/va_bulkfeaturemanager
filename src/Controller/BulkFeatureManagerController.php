@@ -43,7 +43,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
                             if(isset($transactionInfo['warning'])){
                                     foreach($transactionInfo['warning'] as $warningProductId){
                                         $this->addFlash('warning', $this->trans(
-                                            'Cannot add feature id: %featureName% because it has already been added to product id: %productId%',
+                                            'Cannot add feature id: %featureName% to product id: %productId% because it has already added any feature ',
                                             'Modules.Va_bulkfeaturemanager.Admin',
                                             [
                                                 '%featureName%' => $formResponse['feature_form']['feature_id'],

@@ -34,6 +34,12 @@ class UnitFeature
     private $unitFeatureShortcut;
 
     /**
+     * @var int
+     * @ORM\Column(name="unit_feature_base_value", type="integer", length=128 )
+     */
+    private $unitFeatureBaseValue;
+
+    /**
      * @ORM\OneToMany(targetEntity=UnitFeatureValue::class, mappedBy="unitFeature")
      */
     private $unitFeatureValues;
@@ -77,5 +83,15 @@ class UnitFeature
     public function setUnitFeatureShortcut(string $unitFeatureShortcut): void
     {
         $this->unitFeatureShortcut = $unitFeatureShortcut;
+    }
+
+    public function getUnitFeatureBaseValue(): int
+    {
+        return $this->unitFeatureBaseValue;
+    }
+
+    public function setUnitFeatureBaseValue(int $unitFeatureBaseValue): void
+    {
+        $this->unitFeatureBaseValue = $unitFeatureBaseValue;
     }
 }

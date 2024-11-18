@@ -39,26 +39,26 @@ class BulkFeatureManagerService
 //             before insert, check if featureId is not related already with productId
                 $qbSelect = $this->connection->createQueryBuilder();
                 $validFeature = $this->findExisitingFeature($qbSelect, $featureId, $itemId);
-                if(!$validFeature){
-                    $qbInsert = $this->connection->createQueryBuilder();
-                    $qbInsert
-                        ->insert($this->dbPrefix . 'unit_feature_product')
-                        ->values([
-                            'id_unit_feature' => '?',
-                            'id_product' => '?',
-                            'id_unit_feature_value' => '?'
-                        ])
-                        ->setParameter(0, $featureId)
-                        ->setParameter(1, $itemId)
-                        ->setParameter(2, $featureValueId)
-                        ->execute()
-                    ;
+                $qbAction = $this->connection->createQueryBuilder();
 
-                    $transactionLog['success'][] = $itemId;
+                    !$validFeature ? (
+                        $qbAction->insert($this->dbPrefix . 'unit_feature_product')
+                    ):  (
+                        $qbAction->update($this->dbPrefix . 'unit_feature_product')
+                    );
+                    $qbAction
+                        ->set('id_unit_feature', ':id_unit_feature')
+                        ->set('id_product', ':id_product')
+                        ->set('id_unit_feature_value', ':id_unit_feature_value');
+                    if($validFeature)
+                        $qbAction->where('id_product = :id_product');
+                    $qbAction
+                        ->setParameter(':id_unit_feature', $featureId)
+                        ->setParameter(':id_product', $itemId)
+                        ->setParameter(':id_unit_feature_value', $featureValueId);
+                    $qbAction->execute();
 
-                }else{
-                    $transactionLog['warning'][] = $itemId;
-                }
+                    !$validFeature  ? ($transactionLog['success'][] = $itemId):($transactionLog['warning'][] = $itemId);
             }
             $this->connection->commit();
         } catch(\Exception $e){
@@ -72,8 +72,6 @@ class BulkFeatureManagerService
         $transactionLog = [];
         $this->connection->beginTransaction();
         try{
-
-
             foreach($productsId as $itemId){
                 $qbDelete = $this->connection->createQueryBuilder();
                 $validFeature = $this->findExisitingFeature($qbDelete, $featureId, $itemId);
@@ -81,9 +79,7 @@ class BulkFeatureManagerService
                     $qbDelete
                         ->delete($this->dbPrefix . 'unit_feature_product')
                         ->where('id_product = :id_product')
-                        ->andWhere('id_unit_feature = :id_feature')
                         ->setParameter(":id_product", $itemId)
-                        ->setParameter(':id_feature', $featureId)
                         ->execute()
                     ;
                     $transactionLog['success'][] = $itemId;
@@ -141,4 +137,34 @@ class BulkFeatureManagerService
 //
 //    }
 
+    public function getFeatureByProductId(int $productId){
+        $qbSelectId = $this->connection->createQueryBuilder();
+        return $qbSelectId
+                ->select('ufd.id_unit_feature, ufd.id_product, ufd.id_product_attribute, uf.unit_feature_shortcut, ufv.value, uf.unit_feature_base_value')
+                ->from($this->dbPrefix . 'unit_feature_product', 'ufd')
+                ->where('id_product = :id_product')
+                ->setParameter(':id_product', $productId)
+            ->innerJoin('ufd', $this->dbPrefix . 'unit_feature', 'uf', 'ufd.id_unit_feature = uf.id_unit_feature')
+            ->innerJoin('ufd', $this->dbPrefix . 'unit_feature_value', 'ufv', 'ufv.id_unit_feature_value = ufd.id_unit_feature_value')
+            ->execute()
+            ->fetchAllAssociative()
+                ;
+
+    }
+
+
+    public function getFeatureByProductAttributeId(int $productAttributeId){
+        $qbSelectId = $this->connection->createQueryBuilder();
+        return $qbSelectId
+            ->select('ufd.id_unit_feature, ufd.id_product, ufd.id_product_attribute, uf.unit_feature_shortcut, ufv.value, uf.unit_feature_base_value')
+            ->from($this->dbPrefix . 'unit_feature_product', 'ufd')
+            ->where('id_product_attribute = :id_product_attribute')
+            ->setParameter(':id_product_attribute', $productAttributeId)
+            ->innerJoin('ufd', $this->dbPrefix . 'unit_feature', 'uf', 'ufd.id_unit_feature = uf.id_unit_feature')
+            ->innerJoin('ufd', $this->dbPrefix . 'unit_feature_value', 'ufv', 'ufv.id_unit_feature_value = ufd.id_unit_feature_value')
+            ->execute()
+            ->fetchAllAssociative()
+            ;
+
+    }
 }
