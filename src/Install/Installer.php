@@ -44,7 +44,9 @@ class Installer {
             $hooks = [
                 'actionFrontControllerSetMedia',
 //                'displayFrontFeatureInfo',
-                'displayProductAdditionalInfo'
+                'displayProductAdditionalInfo',
+                'displayAdminProductsSeoStepBottom',
+                'displayAdminProductsExtra'
             ];
             return (bool) $module->registerHook($hooks);
         }

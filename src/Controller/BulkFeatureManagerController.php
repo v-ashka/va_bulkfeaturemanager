@@ -342,6 +342,8 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         ]);
     }
 
+
+
     public function deleteFeatureValue(int $featureValueId)
     {
         $repository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository');
