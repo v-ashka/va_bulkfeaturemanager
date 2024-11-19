@@ -1,5 +1,5 @@
 <div class="unit-price">
-  <small>{$feature_shortcut} = {$calculated_price} {$currency}</small>
+  <small>({$calculated_price} {$currency}/{$feature_shortcut})</small>
 </div>
 
 {*'feature_shortuct' => $productFeatures['unit_feature_shortcut'],*}
