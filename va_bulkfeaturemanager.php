@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 }
 require_once __DIR__ . '/vendor/autoload.php';
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Va_bulkfeaturemanager\Install\Installer;
 
 class Va_bulkfeaturemanager extends Module
@@ -128,44 +129,7 @@ class Va_bulkfeaturemanager extends Module
 //        dump($result, $price, $baseValue, $featureValue);
         return number_format($result, 2, '.', '');
     }
-    public function hookDisplayFrontFeatureInfo($params){
-        $bulkFeatureManagerService = $this->get('prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service');
-        $productId = Tools::getValue('id_product');
 
-        $productFeatures = $bulkFeatureManagerService->getFeatureByProductId($productId);
-//
-//            $specialFeature = $this->extractSpecialFeature(3, $productFeatures, true);
-//            $productPrice = Product::getPriceStatic(
-//                $productId,
-//                true, // z podatkiem
-//                null, // id kombinacji produktu (jeśli istnieje)
-//                Context::getContext()->getComputingPrecision(), // precyzja
-//                null,
-//                false,
-//                true, // z uwzględnieniem rabatów
-//                1 // ilość
-//            );
-//            $baseLiterCapacity = 100;
-////            dd($specialFeature);
-//            $pricePerLiter = round(( $productPrice * $baseLiterCapacity ) / ((int) $specialFeature['value']), '2');
-//
-//            $this->smarty->assign([
-//                'features' => $this->extractSpecialFeature(3, $productFeatures, true),
-//                'pricePerBaseUnit' => $pricePerLiter,
-//                'baseUnitCapacity' => $baseLiterCapacity,
-//                'currency' => $this->context->currency->symbol,
-//                'baseUnitSymbol' => $specialFeature['id_feature'] === 3 ? 'ml' : 'kg'
-//            ]);
-//            return $this->fetch('module:va_bulkfeaturemanager/views/templates/front/featureinfo.tpl');
-
-
-    }
-
-    private function extractSpecialFeature(int $featureId, array $productFeatures, bool $displayExtractedArray = false): array{
-        return current(array_filter($productFeatures, function($item) use ($displayExtractedArray, $featureId) {
-            return  $item['id_feature'] === $featureId;
-        }));
-    }
 
     public function hookActionFrontControllerSetMedia()
     {
@@ -177,5 +141,52 @@ class Va_bulkfeaturemanager extends Module
                 'priority' => 1000,
             ]
         );
+    }
+
+    public function hookDisplayAdminProductsExtra($params){
+        $productId = $params['id_product'];
+        $twig = $this->get('twig');
+        $unitFeatureValueBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder');
+        $unitFeatureValueForm = $unitFeatureValueBuilder->getFormFor($productId);
+        $unitFeatureValueForm->handleRequest($params['request']);
+
+
+        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_handler');
+        dump(
+            $unitFeatureValueForm,
+            $params['request'],
+            $unitFeatureValueFormHandler
+        );
+
+//
+//        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
+//        $result = $unitFeatureValueFormHandler->handleFor($featureValueId, $unitFeatureValueForm);
+//
+//        if($result->isSubmitted() && $result->isValid()){
+//            $this->addFlash('success', $this->trans('Successful update', 'Admin.Va_bulkfeaturemanager.Success'));
+//
+//            return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $unitFeatureValueForm->getData()['unit_feature_id']]);
+//        }
+
+
+        $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
+        return $twig->render($template, [
+            'admin_extra_form' => $unitFeatureValueForm->createView(),
+        ]);
+
+//        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
+//        $result = $unitFeatureValueFormHandler->handleFor($featureValueId, $unitFeatureValueForm);
+//
+//        $product = new Product($productId);
+//
+//        $form = $formFactory
+//            ->createNamedBuilder('seo_special_field', TextType::class, "")
+//            ->getForm();
+//
+//        $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
+
+//        return $twig->render($template, [
+//            'seo_special_field' => $form->createView()
+//        ]);
     }
 }
