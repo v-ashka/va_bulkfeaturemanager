@@ -41,22 +41,34 @@ class BulkFeatureManagerService
                 $validFeature = $this->findExisitingFeature($qbSelect, $featureId, $itemId);
                 $qbAction = $this->connection->createQueryBuilder();
 
-                    !$validFeature ? (
+//                    !$validFeature ? (
+//                        $qbAction->insert($this->dbPrefix . 'unit_feature_product')
+//                    ):  (
+//                        $qbAction->update($this->dbPrefix . 'unit_feature_product')
+//                    );
+
+                    if(!$validFeature){
                         $qbAction->insert($this->dbPrefix . 'unit_feature_product')
-                    ):  (
+                            ->values([
+                                'id_unit_feature' => ':id_unit_feature',
+                                'id_product' => ':id_product',
+                                'id_unit_feature_value' => ':id_unit_feature_value'
+                            ])
+                            ->setParameter(':id_unit_feature', $featureId)
+                            ->setParameter(':id_product', $itemId)
+                            ->setParameter(':id_unit_feature_value', $featureValueId)
+                            ->execute();
+                    }else{
                         $qbAction->update($this->dbPrefix . 'unit_feature_product')
-                    );
-                    $qbAction
-                        ->set('id_unit_feature', ':id_unit_feature')
-                        ->set('id_product', ':id_product')
-                        ->set('id_unit_feature_value', ':id_unit_feature_value');
-                    if($validFeature)
-                        $qbAction->where('id_product = :id_product');
-                    $qbAction
-                        ->setParameter(':id_unit_feature', $featureId)
-                        ->setParameter(':id_product', $itemId)
-                        ->setParameter(':id_unit_feature_value', $featureValueId);
-                    $qbAction->execute();
+                            ->set('id_unit_feature', ':id_unit_feature')
+                            ->set('id_product', ':id_product')
+                            ->set('id_unit_feature_value', ':id_unit_feature_value')
+                            ->where('id_product = :id_product')
+                            ->setParameter(':id_unit_feature', $featureId)
+                            ->setParameter(':id_product', $itemId)
+                            ->setParameter(':id_unit_feature_value', $featureValueId)
+                            ->execute();
+                    }
 
                     !$validFeature  ? ($transactionLog['success'][] = $itemId):($transactionLog['warning'][] = $itemId);
             }

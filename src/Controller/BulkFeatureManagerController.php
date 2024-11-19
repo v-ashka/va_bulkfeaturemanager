@@ -62,9 +62,9 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
                                 ]
                             ));
                         }else{
-                            $this->addFlash('error',
+                            $this->addFlash('warning',
                                 $this->trans(
-                                    'The selected products already have any feature',
+                                    'Product property overwritten successfully',
                                     'Modules.Va_bulkfeaturemanager.Admin')
                             );
                         }
@@ -374,6 +374,8 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             $featuresValue = $repository->findById($featureValueIds);
         } catch (EntityNotFoundException $e){
             $featuresValue = null;
+            $this->addFlash('error', $this->trans('This feature value does not exist', 'Admin.Va_bulkfeaturemanager.Feature'));
+            return $this->redirectToRoute('va_bulkfeaturemanager_features_list');
         }
 
         if(!empty($featuresValue)){
@@ -385,7 +387,6 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             $em->flush();
             $this->addFlash('success', $this->trans('Successful delete', 'Admin.Va_bulkfeaturemanager.Feature'));
         }
-
-        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $feature->getUnitFeature()->getId()]);
+        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $featuresValue[0]->getUnitFeature()->getId()]);
     }
 }
