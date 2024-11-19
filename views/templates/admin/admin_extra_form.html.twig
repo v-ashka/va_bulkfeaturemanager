@@ -1,0 +1,19 @@
+{% block content %}
+  {{ form_start(admin_extra_form) }}
+  <div class="card">
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(admin_extra_form) }}
+      </div>
+    </div>
+{#    <div class="card-footer">#}
+{#      <div class="d-flex justify-content-end">#}
+{#        <button class="btn btn-primary float-right" id="save-button" type="submit">#}
+{#          {{ 'Save'|trans({}, 'Admin.Actions') }}#}
+{#        </button>#}
+{#      </div>#}
+{#    </div>#}
+
+  </div>
+  {{ form_end(admin_extra_form) }}
+{% endblock %}
