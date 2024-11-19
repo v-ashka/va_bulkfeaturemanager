@@ -219,3 +219,46 @@ services:
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.unit_feature_value_configuration_data_handler'
+
+
+# AdminProductsExtraConfiguration - additional tab
+  Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType:
+    class: Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type}
+
+  #2
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataProvider'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType'
+      - '@prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider'
+
+  prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository:
+    class: Va_bulkfeaturemanager\Repository\UnitFeatureProductRepository
+    public: true
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - Va_bulkfeaturemanager\Entity\UnitFeatureProduct
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler:
+    class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataHandler'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    public: true
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler'
