@@ -68,6 +68,21 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'feature_value',
                 ])
             )
+            ->add((new ActionColumn('feature_action'))
+                ->setName($this->trans('Action', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new SubmitRowAction('show'))
+                            ->setName($this->trans('Go to product', [], 'Admin.Actions'))
+                            ->setIcon('visibility')
+                            ->setOptions([
+                                'route' => "admin_products_edit",
+                                'route_param_name' => "productId",
+                                'route_param_field' => "id_product",
+                            ])
+                        )
+                ])
+            )
             ;
 
     }
