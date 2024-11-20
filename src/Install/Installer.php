@@ -44,10 +44,15 @@ class Installer {
             $hooks = [
                 'actionFrontControllerSetMedia',
 //                'displayFrontFeatureInfo',
-                'displayProductAdditionalInfo',
-                'displayAdminProductsSeoStepBottom',
-                'displayAdminProductsExtra'
+//                'displayProductAdditionalInfo',
+                'actionProductFormBuilderModifier',
+                'displayAdminProductsExtra',
+//                'displayAdminProductsMainStepLeftColumnMiddle',
+                'actionAdminProductsControllerSaveAfter',
+                'actionObjectProductDeleteAfter',
+                'actionGetProductPropertiesAfter'
             ];
+
             return (bool) $module->registerHook($hooks);
         }
 }

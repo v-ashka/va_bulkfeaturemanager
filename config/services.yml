@@ -234,6 +234,8 @@ services:
     class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataProvider'
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
 
   prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
@@ -254,6 +256,8 @@ services:
     class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataHandler'
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
       - '@doctrine.orm.default_entity_manager'
 
   prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_handler:

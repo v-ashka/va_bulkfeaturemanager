@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 }
 require_once __DIR__ . '/vendor/autoload.php';
 
+use PrestaShop\Module\FacetedSearch\Hook\Product;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Va_bulkfeaturemanager\Install\Installer;
 
@@ -126,10 +127,8 @@ class Va_bulkfeaturemanager extends Module
 
     public function calculateProductBaseValue( float $baseValue, float $featureValue, float $price){
         $result = ($price * $baseValue) / $featureValue;
-//        dump($result, $price, $baseValue, $featureValue);
         return number_format($result, 2, '.', '');
     }
-
 
     public function hookActionFrontControllerSetMedia()
     {
@@ -142,7 +141,6 @@ class Va_bulkfeaturemanager extends Module
             ]
         );
     }
-
     public function hookDisplayAdminProductsExtra($params){
         $productId = $params['id_product'];
         $twig = $this->get('twig');
@@ -150,43 +148,17 @@ class Va_bulkfeaturemanager extends Module
         $unitFeatureValueForm = $unitFeatureValueBuilder->getFormFor($productId);
         $unitFeatureValueForm->handleRequest($params['request']);
 
-
-        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_handler');
-        dump(
-            $unitFeatureValueForm,
-            $params['request'],
-            $unitFeatureValueFormHandler
-        );
-
-//
-//        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
-//        $result = $unitFeatureValueFormHandler->handleFor($featureValueId, $unitFeatureValueForm);
-//
-//        if($result->isSubmitted() && $result->isValid()){
-//            $this->addFlash('success', $this->trans('Successful update', 'Admin.Va_bulkfeaturemanager.Success'));
-//
-//            return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $unitFeatureValueForm->getData()['unit_feature_id']]);
-//        }
-
-
         $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
         return $twig->render($template, [
             'admin_extra_form' => $unitFeatureValueForm->createView(),
         ]);
-
-//        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler');
-//        $result = $unitFeatureValueFormHandler->handleFor($featureValueId, $unitFeatureValueForm);
-//
-//        $product = new Product($productId);
-//
-//        $form = $formFactory
-//            ->createNamedBuilder('seo_special_field', TextType::class, "")
-//            ->getForm();
-//
-//        $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
-
-//        return $twig->render($template, [
-//            'seo_special_field' => $form->createView()
-//        ]);
     }
+    public function hookActionAdminProductsControllerSaveAfter($params){
+        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler');
+        $data = Tools::getValue('unit_feature_products_extra_form');
+        $id = Tools::getValue('id_product');
+        $unitFeatureValueFormHandler->update((int) $id, $data);
+    }
+
+
 }

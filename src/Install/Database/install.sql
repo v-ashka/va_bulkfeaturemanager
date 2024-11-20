@@ -19,11 +19,13 @@ CREATE TABLE PREFIX_unit_feature_value (
 
 -- va_unit_feature_product table
 CREATE TABLE PREFIX_unit_feature_product (
+                                           id int(11) NOT NULL AUTO_INCREMENT,
                                            id_unit_feature INT NOT NULL,
                                            id_unit_feature_value INT NOT NULL,
                                            id_product INT NOT NULL,
                                            id_product_attribute INT DEFAULT NULL,
                                            id_attribute_group INT DEFAULT NULL,
+                                           PRIMARY KEY (id),
                                            CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature FOREIGN KEY (id_unit_feature)
                                              REFERENCES PREFIX_unit_feature(id_unit_feature) ON DELETE CASCADE,
                                            CONSTRAINT FK_PREFIX_unit_feature_product_unit_feature_value FOREIGN KEY (id_unit_feature_value)
