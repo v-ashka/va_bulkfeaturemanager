@@ -43,14 +43,11 @@ class Installer {
         private function registerHooks(\Module $module): bool{
             $hooks = [
                 'actionFrontControllerSetMedia',
-//                'displayFrontFeatureInfo',
-//                'displayProductAdditionalInfo',
-                'actionProductFormBuilderModifier',
+                'displayBackOfficeHeader',
+                'displayProductAdditionalInfo',
                 'displayAdminProductsExtra',
-//                'displayAdminProductsMainStepLeftColumnMiddle',
                 'actionAdminProductsControllerSaveAfter',
-                'actionObjectProductDeleteAfter',
-                'actionGetProductPropertiesAfter'
+
             ];
 
             return (bool) $module->registerHook($hooks);

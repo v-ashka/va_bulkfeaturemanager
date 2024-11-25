@@ -31,34 +31,38 @@ class UnitFeatureProductsExtraDataHandler implements FormDataHandlerInterface
 
     public function create(array $data)
     {
+        $unitFeatureProduct = new UnitFeatureProduct();
+        $unitFeatureProduct->setIdProductAttribute($data['id_product']);
+
+        $unitFeature = $this->unitFeatureRepository->findOneById((int) $data['feature_id']);
+        $unitFeatureValue = $this->unitFeatureValueRepository->findOneById((int) $data['feature_id_val']);
+
+        $unitFeatureProduct->setUnitFeature($unitFeature);
+        $unitFeatureProduct->setUnitFeatureValue($unitFeatureValue);
+
+        $this->entityManager->persist($unitFeatureProduct);
+        $this->entityManager->flush();
+
+        return true;
     }
 
     public function update($id, array $data)
     {
 
         $unitFeatureProduct = $this->unitFeatureProductRepository->findOneBy(['idProductAttribute' => $id]);
-        file_put_contents(
-            _PS_MODULE_DIR_ .'/va_bulkfeaturemanager/2debug_hook.log',
-            json_encode([
-                'time' => date('Y-m-d H:i:s'),
-                'hook' => 'hookActionAdminProductsControllerSaveAfter',
-                'id' => $id,
-                'data' => $data,
-                'repository_class' => get_class($this->unitFeatureProductRepository),
-                'entity_manager_class' => get_class($this->entityManager),
-                'repository_methods' => get_class_methods($this->unitFeatureProductRepository),
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n",
-            FILE_APPEND
-        );
-        $unitFeature = $this->unitFeatureRepository->findOneById((int) $data['feature_id']);
-        $unitFeatureValue = $this->unitFeatureValueRepository->findOneById((int) $data['feature_id_val']);
+        if($unitFeatureProduct === null){
+            $data['id_product'] = $id;
+            $this->create($data);
+        }else{
+            $unitFeature = $this->unitFeatureRepository->findOneById((int) $data['feature_id']);
+            $unitFeatureValue = $this->unitFeatureValueRepository->findOneById((int) $data['feature_id_val']);
 
-        $unitFeatureProduct->setUnitFeature($unitFeature);
-        $unitFeatureProduct->setUnitFeatureValue($unitFeatureValue);
-//        dump($unitFeatureProduct);
-            dump($unitFeatureProduct);
-        $this->entityManager->persist($unitFeatureProduct);
-        $this->entityManager->flush();
-            return true;
+            $unitFeatureProduct->setUnitFeature($unitFeature);
+            $unitFeatureProduct->setUnitFeatureValue($unitFeatureValue);
+
+            $this->entityManager->persist($unitFeatureProduct);
+            $this->entityManager->flush();
+        }
+        return true;
     }
 }

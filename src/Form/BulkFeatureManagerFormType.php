@@ -23,7 +23,7 @@ class BulkFeatureManagerFormType extends TranslatorAwareType{
                 'choices' => [
                     'Add Feature' => 'add_feature',
                     'Remove feature' => 'remove_feature',
-                    'Delete all features from product' => 'delete_all',
+                    'Delete all features from selected products' => 'delete_all',
                 ],
                 'required' => true,
             ])

@@ -14,10 +14,4 @@ use Doctrine\ORM\QueryBuilder;
  */
 class UnitFeatureRepository extends EntityRepository
 {
-
-    public function getAllIds(){
-        $qb = $this->createQueryBuilder('uf')
-                    ->select('uf.id_unit_feature')
-        ;
-    }
 }
