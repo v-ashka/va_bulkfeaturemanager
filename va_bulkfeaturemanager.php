@@ -42,7 +42,7 @@ class Va_bulkfeaturemanager extends Module
             'class_name' => 'BulkFeatureManagerController',
             'route_name' => 'va_bulkfeaturemanager',
             'visible' => true,
-            'name' => 'Feature Manager',
+            'name' => 'Unit Price Manager',
             'parent_class_name' => 'CONFIGURE',
             'icon' => "category",
         ],
@@ -63,7 +63,7 @@ class Va_bulkfeaturemanager extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Unit price manager');
+        $this->displayName = $this->l('Unit Price Manager');
         $this->description = $this->l('This module adds the functionality to display the unit price of a product below the main price. The module allows for bulk assignment of units to products with a unit previously configured by the user.');
 
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);

@@ -1,48 +1,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% block content %}
   {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid-components.html.twig'%}
-
-{#  <script>#}
-
-{#    console.log(window.location)#}
-{#    $(document).ready(function () {#}
-{#      window.prestashop.component.initComponents([#}
-{#        'Grid',#}
-{#      ]);#}
-{#      // Learn more about components in documentation#}
-{#      // https://devdocs.prestashop.com/1.7/development/components/global-components/#}
-{#      const grid = new window.prestashop.component.Grid('gridFeatureList');#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.BulkOpenTabsExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.ChoiceExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.ModalFormSubmitExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());#}
-{#      grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());#}
-
-
-
-{#    });#}
-
-{#  </script>#}
   {% block top_menu %}
     {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/top_menu.html.twig' %}
   {% endblock %}
   <div class="card">
     <div class="card-body">
       {% block featurelist_panel %}
-{#      <div class="row">#}
-{#        <div class="col">#}
-{#          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featuresGrid} %}#}
-{#        </div>#}
-{#      </div>#}
         {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid.html.twig' %}
       {% endblock %}
     </div>

@@ -43,7 +43,6 @@ class Installer {
         private function registerHooks(\Module $module): bool{
             $hooks = [
                 'actionFrontControllerSetMedia',
-                'displayBackOfficeHeader',
                 'displayProductAdditionalInfo',
                 'displayAdminProductsExtra',
                 'actionAdminProductsControllerSaveAfter',
