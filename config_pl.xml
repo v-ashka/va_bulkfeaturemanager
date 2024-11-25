@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>va_bulkfeaturemanager</name>
-    <displayName><![CDATA[Bulk Product Feature Manager]]></displayName>
-    <version><![CDATA[1.0.0]]></version>
-    <description><![CDATA[This module can add new feature to products]]></description>
+    <displayName><![CDATA[Unit price manager]]></displayName>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[This module adds the functionality to display the unit price of a product below the main price. The module allows for bulk assignment of units to products with a unit previously configured by the user.]]></description>
     <author><![CDATA[Marcin Wijaszka]]></author>
     <tab><![CDATA[administration]]></tab>
     <is_configurable>0</is_configurable>

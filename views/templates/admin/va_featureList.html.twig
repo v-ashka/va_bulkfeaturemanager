@@ -1,0 +1,18 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% block content %}
+  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid-components.html.twig'%}
+  {% block top_menu %}
+    {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/top_menu.html.twig' %}
+  {% endblock %}
+  <div class="card">
+    <div class="card-body">
+      {% block featurelist_panel %}
+        {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid.html.twig' %}
+      {% endblock %}
+    </div>
+  </div>
+  {% block javascripts %}
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  {% endblock %}
+{% endblock %}
+

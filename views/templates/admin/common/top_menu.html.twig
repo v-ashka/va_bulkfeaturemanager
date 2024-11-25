@@ -1,0 +1,24 @@
+{% block top_menu %}
+<div class="py-2">
+  <div class="d-flex flex-wrap" style="gap: 0.5rem">
+    <a class="btn btn-primary" href="{{ path('va_bulkfeaturemanager') }}">
+      <i class="material-icons text-white">home</i> {{ 'Product feature manager '|trans({}, 'Admin.Actions') }}
+    </a>
+    <a class="btn btn-info" href="{{ path('va_bulkfeaturemanager_features_list') }}">
+      <i class="material-icons text-white">category</i> {{ 'Feature list '|trans({}, 'Admin.Actions') }}
+    </a>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <i class="material-icons">category</i> {{ 'Manage features'|trans({}, 'Admin.Actions') }}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item bg-secondary text-light disabled" href="{{ path('va_bulkfeaturemanager_features_list') }}"> <i class="material-icons text-white">category</i>{{ 'Feature list'|trans({}, 'Admin.Actions') }}</a>
+        <a class="dropdown-item px-4" href="{{ path('va_bulkfeaturemanager_add_feature') }}"> <i class="material-icons">add</i> {{ 'Add new feature'|trans({}, 'Admin.Actions') }}</a>
+        <a class="dropdown-item bg-dark text-light disabled" href="{{ path('va_bulkfeaturemanager_features_list') }}"><i class="material-icons text-white">pin</i> {{ 'Feature value list'|trans({}, 'Admin.Actions') }}</a>
+        <a class="dropdown-item px-4" href="{{ path('va_bulkfeaturemanager_add_feature_value') }}"> <i class="material-icons">add</i> {{ 'Add new feature value'|trans({}, 'Admin.Actions') }}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

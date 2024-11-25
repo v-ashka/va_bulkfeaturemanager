@@ -1,0 +1,32 @@
+
+{% block content %}
+  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/js_feature_choice_type.html.twig'
+    with {
+    'featureListId' :'#unit_feature_products_extra_form_feature_id',
+    'featureValuesListId': '#unit_feature_products_extra_form_feature_id_val',
+    'loadGrid': 0
+    }
+  %}
+  {% trans_default_domain 'Modules.Va_bulkfeaturemanager.AdminExtraForm' %}
+  <div class="card">
+    <div class="card-header d-flex justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+  {% if additional_info == false %}
+    <i class="material-icons mr-2">add</i> <h3>{{ 'Add new feature to product'|trans }}</h3>
+  {% else %}
+    <i class="material-icons mr-2">edit</i> <h3>{{ 'Modify feature in product'|trans }}</h3>
+  {% endif %}
+      </div>
+      <a
+        href="{{ path('va_bulkfeaturemanager') }}"
+        class="tooltip-link"
+        data-toggle="pstooltip"
+        title="{{ 'Go to module page'|trans }}"
+        data-placement="top"
+      ><i class="material-icons">home</i></a>
+    </div>
+  <div class="card-body">
+  {{ form_widget(admin_extra_form) }}
+  </div>
+  </div>
+{% endblock %}

@@ -2,4 +2,88 @@ va_bulkfeaturemanager:
   path: va_bulkfeaturemanager/configuration
   methods: [GET, POST]
   defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayProductConfiguration'
+
+va_bulkfeaturemanager_features_list:
+  path: va_bulkfeaturemanager/features
+  methods: GET
+  defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::indexAction'
+
+#features list - search
+va_bulkfeaturemanager_search_feature:
+  path: va_bulkfeaturemanager/features
+  methods: POST
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::searchAction'
+
+#featureUnit add
+va_bulkfeaturemanager_add_feature:
+  path: va_bulkfeaturemanager/features/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::addNewFeatureAction'
+
+#featureUnit edit
+va_bulkfeaturemanager_edit_feature:
+  path: va_bulkfeaturemanager/features/{featureId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::editFeatureAction'
+  requirements:
+    featureId: \d+
+#featureUnit delete
+va_bulkfeaturemanager_delete_feature:
+  path: va_bulkfeaturemanager/features/{featureId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteFeatureAction'
+  requirements:
+    featureId: \d+
+
+va_bulkfeaturemanager_feature_values:
+  path: va_bulkfeaturemanager/feature/{featureId}/values
+  methods: GET
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayFeatureValuesAction'
+  requirements:
+    featureId: \d+
+
+#featureUnitValue search
+va_bulkfeaturemanager_feature_value_search:
+  path: va_bulkfeaturemanager/feature/{featureId}/values
+  methods: POST
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::searchFeatureValueAction'
+  requirements:
+      featureId: \d+
+
+#featureUnit add
+va_bulkfeaturemanager_add_feature_value:
+  path: va_bulkfeaturemanager/feature/value/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::addNewFeatureValueAction'
+
+#featureUnitValue edit
+va_bulkfeaturemanager_feature_value_edit:
+  path: va_bulkfeaturemanager/feature/value/{featureValueId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::editFeatureValueAction'
+    requirements:
+      featureValueId: \d+
+#featureUnitValue delete
+va_bulkfeaturemanager_feature_value_delete:
+  path: va_bulkfeaturemanager/feature/value/{featureValueId}
+  methods: DELETE
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteFeatureValue'
+    requirements:
+      featureValueId: \d+
+#featureUnitValue delete bulk
+va_bulkfeaturemanager_feature_value_delete_bulk:
+  path: va_bulkfeaturemanager/feature/value
+  methods: POST
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteBulkFeatureValue'

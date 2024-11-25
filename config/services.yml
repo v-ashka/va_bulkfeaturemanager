@@ -9,7 +9,7 @@ services:
     tags:
       - { name: form.type }
 
-# form data provider
+# form data provider - featuremanager
   prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_provider:
     class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerDataProvider'
 
@@ -27,12 +27,12 @@ services:
 # grid factory
   #1
   prestashop.module.va_bulkfeaturemanager.grid.bulkfeaturemanager.grid_definition_factory:
-    class: 'Va_bulkfeaturemanager\Grid\Factory\BulkFeatureManagerGridDefinitionFactory'
+    class: 'Va_bulkfeaturemanager\Grid\GridProductsFeature\Factory\BulkFeatureManagerGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
   #2
   prestashop.module.va_bulkfeaturemanager.grid.query_builder.bulkfeaturemanager:
-    class: 'Va_bulkfeaturemanager\Grid\Query\BulkFeatureQueryBuilder'
+    class: 'Va_bulkfeaturemanager\Grid\GridProductsFeature\Query\BulkFeatureQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
@@ -62,3 +62,207 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+
+## UnitfeatureConfiguration
+
+## GridFeatureList
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory:
+    class: Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.query.unit_feature_query_builder:
+    class: 'Va_bulkfeaturemanager\Grid\GridFeatureList\Query\UnitFeatureQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    public: true
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory'
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.data_provider'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.data_provider:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.query.unit_feature_query_builder'
+      - '@prestashop.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'gridFeatureList'
+
+  #form data provider - UnitFeatureConfiguration
+  #1
+  Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType:
+    class: Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  #2
+  prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationDataProvider'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+
+  prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository:
+    class: Va_bulkfeaturemanager\Repository\UnitFeatureRepository
+    public: true
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - Va_bulkfeaturemanager\Entity\UnitFeature
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.builder.formbuilder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureConfigurationFormType'
+      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeatureconfiguration.data_provider'
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.unit_feature_configuration_data_handler:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureConfiguration\UnitFeatureDataHandler'
+    #args to constructor
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - "@doctrine.orm.default_entity_manager"
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    public: true
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.form.unit_feature_configuration.unit_feature_configuration_data_handler'
+
+  # GridFeatureValueList
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.definition.factory.gridfeaturevaluedefinitionfactory:
+    class: Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.query.gridfeaturevaluequerybuilder:
+    class: 'Va_bulkfeaturemanager\Grid\GridFeatureValueList\Query\GridFeatureValueQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    public: true
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.definition.factory.gridfeaturevaluedefinitionfactory'
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.data_provider'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.data_provider:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.grid.grid_feature_value_list.query.gridfeaturevaluequerybuilder'
+      - '@prestashop.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'gridFeatureValueList'
+
+
+  # UnitFeatureValueConfiguration
+  #form data provider - UnitFeatureValueConfiguration
+  #1
+
+  Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueConfigurationFormType:
+    class: Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueConfigurationFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+  #2
+  prestashop.module.va_bulkfeaturemanager.form.unitfeaturevalueconfiguration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueConfigurationDataProvider'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.builder.formbuilder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueConfigurationFormType'
+      - '@prestashop.module.va_bulkfeaturemanager.form.unitfeaturevalueconfiguration.data_provider'
+
+  prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository:
+    class: Va_bulkfeaturemanager\Repository\UnitFeatureValueRepository
+    public: true
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - Va_bulkfeaturemanager\Entity\UnitFeatureValue
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.unit_feature_value_configuration_data_handler:
+    class: 'Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueDataHandler'
+    #args to constructor
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - "@doctrine.orm.default_entity_manager"
+
+  prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    public: true
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.form.unit_feature_value_configuration.unit_feature_value_configuration_data_handler'
+
+
+# AdminProductsExtraConfiguration - additional tab
+  Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType:
+    class: Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type}
+
+  #2
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider:
+    class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataProvider'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraFormType'
+      - '@prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider'
+
+  prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository:
+    class: Va_bulkfeaturemanager\Repository\UnitFeatureProductRepository
+    public: true
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - Va_bulkfeaturemanager\Entity\UnitFeatureProduct
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler:
+    class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataHandler'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
+      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    public: true
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler'

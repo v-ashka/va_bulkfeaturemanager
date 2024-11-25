@@ -10,13 +10,9 @@ class BulkFeatureManagerDataProvider implements FormDataProviderInterface
 
     public function getData()
     {
-        $data = [];
-
-        return $data;
     }
 
     public function setData(array $data)
     {
-        return $data;
     }
 }
