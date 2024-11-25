@@ -30,8 +30,6 @@ if (!defined('_PS_VERSION_')) {
 }
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PrestaShop\Module\FacetedSearch\Hook\Product;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Va_bulkfeaturemanager\Install\Installer;
 
 class Va_bulkfeaturemanager extends Module
@@ -54,7 +52,7 @@ class Va_bulkfeaturemanager extends Module
     {
         $this->name = 'va_bulkfeaturemanager';
         $this->tab = 'administration';
-        $this->version = '2.0.0';
+        $this->version = '2.1.0';
         $this->author = 'Marcin Wijaszka';
         $this->need_instance = 0;
 
@@ -65,8 +63,8 @@ class Va_bulkfeaturemanager extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Bulk Product Feature Manager');
-        $this->description = $this->l('This module can add new feature to products');
+        $this->displayName = $this->l('Unit price manager');
+        $this->description = $this->l('This module adds the functionality to display the unit price of a product below the main price. The module allows for bulk assignment of units to products with a unit previously configured by the user.');
 
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
     }
@@ -141,18 +139,25 @@ class Va_bulkfeaturemanager extends Module
             ]
         );
     }
+
     public function hookDisplayAdminProductsExtra($params){
         $productId = $params['id_product'];
         $twig = $this->get('twig');
         $unitFeatureValueBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder');
         $unitFeatureValueForm = $unitFeatureValueBuilder->getFormFor($productId);
         $unitFeatureValueForm->handleRequest($params['request']);
-
         $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
+
+        $unitProductRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository');
+        $productExistCheck = $unitProductRepository->countById(['idProductAttribute' => $productId]);
+
         return $twig->render($template, [
+            'additional_info' => $productExistCheck,
             'admin_extra_form' => $unitFeatureValueForm->createView(),
         ]);
     }
+
+
     public function hookActionAdminProductsControllerSaveAfter($params){
         $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler');
         $data = Tools::getValue('unit_feature_products_extra_form');
