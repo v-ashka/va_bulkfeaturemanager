@@ -70,8 +70,7 @@ class Va_bulkfeaturemanager extends Module
     }
 
     /**
-     * Don't forget to create update methods if needed:
-     * http://doc.prestashop.com/display/PS16/Enabling+the+Auto-Update
+     * Install require elements
      */
     public function install(): bool
     {
@@ -83,7 +82,9 @@ class Va_bulkfeaturemanager extends Module
 
 
     }
-
+    /**
+     * Uninstall require elements like database data
+     */
     public function uninstall(): bool
     {
         if(!parent::uninstall()){
@@ -93,11 +94,18 @@ class Va_bulkfeaturemanager extends Module
         return $installer->uninstall($this);
     }
 
+    /**
+     * Display calculated unit price depends on product id
+     * @param $params
+     * @return string|void
+     */
     public function hookDisplayProductAdditionalInfo($params){
         $bulkFeatureManagerService = $this->get('prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service');
+//        Get product and id_product_attribute id
         $productId = Tools::getValue('id_product');
         $productAttribute = Tools::getValue('id_product_attribute');
         $productFeatures = [];
+
         if($productAttribute){
 //            TODO product attribute get feature
                 $productAttribute = [];
@@ -106,11 +114,16 @@ class Va_bulkfeaturemanager extends Module
             $productFeatures = $bulkFeatureManagerService->getFeatureByProductId((int) $productId);
         }
 
+//        If product feature has been mapped, calculate unit price
         if($productFeatures){
+//            get static price from product
             $productPrice = Product::getPriceStatic($productId);
             $calculatedPrice = $this->calculateProductBaseValue(
+//                unit feature base value
                 (float) $productFeatures[0]['unit_feature_base_value'],
+//                product value
                 (float) $productFeatures[0]['value'],
+//                product price
                 (float) $productPrice);
             $this->smarty->assign([
                 'feature_shortcut' => $productFeatures[0]['unit_feature_shortcut'],
@@ -118,16 +131,29 @@ class Va_bulkfeaturemanager extends Module
                 'currency' => $this->context->currency->symbol,
                 'calculated_price' => $calculatedPrice
             ]);
+//            fetch values to file
             return $this->fetch('module:va_bulkfeaturemanager/views/templates/front/featureinfo.tpl');
         }
 
     }
 
+    /**
+     * Calculate product unit price
+     * @param float $baseValue - this value is set in module configuration page
+     * @param float $featureValue - this value is set in module configuration page
+     * @param float $price - this value is fetching from product using getPriceStatic() method
+     * @return string
+     */
     public function calculateProductBaseValue( float $baseValue, float $featureValue, float $price){
         $result = ($price * $baseValue) / $featureValue;
+//        Always return value with 2 decimals after separator (ex. 2.40 )
         return number_format($result, 2, '.', '');
     }
 
+    /**
+     * Attach module stylesheet to front controller
+     * @return void
+     */
     public function hookActionFrontControllerSetMedia()
     {
         $this->context->controller->registerStylesheet(
@@ -140,29 +166,52 @@ class Va_bulkfeaturemanager extends Module
         );
     }
 
+    /**
+     * Display extra tab in product configuration page.
+     * This hook displays extra form to modify feature inside product configuration page
+     * @param $params
+     * @return mixed
+     * @throws Exception
+     */
     public function hookDisplayAdminProductsExtra($params){
+//        Get product id value
         $productId = $params['id_product'];
+//        Register twig for render template form
         $twig = $this->get('twig');
+
+//        Unit feature value builder service to manage form
         $unitFeatureValueBuilder = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder');
         $unitFeatureValueForm = $unitFeatureValueBuilder->getFormFor($productId);
         $unitFeatureValueForm->handleRequest($params['request']);
-        $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
 
+//        Check if product have attached any features
         $unitProductRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository');
+//        If productExistCheck -> 0 set form title to "Add new feature to product" else display "Modify feature in product"
         $productExistCheck = $unitProductRepository->countById(['idProductAttribute' => $productId]);
 
+        $template = '@Modules/va_bulkfeaturemanager/views/templates/admin/admin_extra_form.html.twig';
         return $twig->render($template, [
             'additional_info' => $productExistCheck,
             'admin_extra_form' => $unitFeatureValueForm->createView(),
         ]);
     }
 
-
+    /**
+     * Save set values in form and send to feature product service
+     * @param $params
+     * @return void
+     * @throws Exception
+     */
     public function hookActionAdminProductsControllerSaveAfter($params){
-        $unitFeatureValueFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler');
+//        Get feature product form handler service class
+        $unitFeatureProductFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler');
+//        Get array values with keys: feature_id and feature_value_id from 'unit_feature_products_extra_form' form
+//        (ex. ["feature_id" => "1", "feature_val_id" => "2"] )
         $data = Tools::getValue('unit_feature_products_extra_form');
+//        Get product id
         $id = Tools::getValue('id_product');
-        $unitFeatureValueFormHandler->update((int) $id, $data);
+//        Send saved data to update method
+        $unitFeatureProductFormHandler->update((int) $id, $data);
     }
 
 

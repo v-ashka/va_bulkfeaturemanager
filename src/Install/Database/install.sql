@@ -57,9 +57,9 @@ INSERT INTO PREFIX_unit_feature_value (id_unit_feature, value) VALUES
                                                                  (3, '21'), (3, '22'), (3, '23'), (3, '24');
 
 -- Losowe przypisania cech do produktów (id_product od 1 do 19)
-INSERT INTO PREFIX_unit_feature_product (id_unit_feature, id_unit_feature_value, id_product, id_product_attribute) VALUES
-                                                                                                                     (1, 1, 1, 1),
-                                                                                                                     (2, 2, 2, 9),
-                                                                                                                     (2, 3, 2, 10),
-                                                                                                                     (3, 5, 3, 1),
-                                                                                                                     (1, 7, 4, 1);
+INSERT INTO PREFIX_unit_feature_product (id_unit_feature, id_unit_feature_value, id_product) VALUES
+                                                                                                                     (1, 1, 1),
+                                                                                                                     (2, 2, 2),
+                                                                                                                     (2, 3, 2),
+                                                                                                                     (3, 5, 3),
+                                                                                                                     (1, 7, 4);

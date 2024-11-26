@@ -9,6 +9,7 @@ class UnitFeatureFilters extends Filters
 {
     protected $filterId = UnitFeatureDefinitionFactory::GRID_ID;
 
+//    get defaults filter for grid
     public static function getDefaults(): array
     {
         return [

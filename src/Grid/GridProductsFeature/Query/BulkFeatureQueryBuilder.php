@@ -18,10 +18,18 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
+    /**
+     * Select fields to query in grid.
+     * You must select the columns that were provided in GridDefinitionFactory
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+//        Create query builder with combined columns from getQueryBuilder() method
+        $qb = $this->getQueryBuilder();
         $qb
+//            This query builder return fields: id_product, product_name, product_category, feature_name, feature_value
             ->select('p.id_product, pl.name, pc.name as category, ufv.value as feature_value')
             ->addSelect("(
         SELECT DISTINCT uf.unit_feature_name FROM " . $this->dbPrefix . "unit_feature uf
@@ -31,7 +39,7 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
             ->addGroupBy('pl.name')
             ->addGroupBy('pc.name')
         ;
-
+//      Apply pagination and sorting functionality to grid
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
             ->applyPagination($searchCriteria, $qb)
@@ -41,15 +49,22 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
 
     }
 
-
+    /**
+     * Get amount of elements in grid
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        $qb = $this->getQueryBuilder()
         ->select('COUNT(p.id_product)');
-
         return $qb;
     }
 
+    /**
+     * Combine all feature columns together using left join
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     public function getQueryBuilder(){
         $qb = $this->connection
             ->createQueryBuilder()
@@ -59,7 +74,6 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
             ->leftJoin('p', $this->dbPrefix. 'unit_feature_product', 'ufp', 'p.id_product = ufp.id_product')
             ->leftJoin('ufp', $this->dbPrefix . 'unit_feature_value', 'ufv', 'ufp.id_unit_feature_value = ufv.id_unit_feature_value')
             ;
-
         return $qb;
     }
 }

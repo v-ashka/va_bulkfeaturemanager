@@ -8,16 +8,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Db;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Va_bulkfeaturemanager\Service\BulkFeatureManagerService;
+
 class UnitFeatureValueConfigurationFormType extends TranslatorAwareType
 {
     const domainTranslation = 'Modules.Va_bulkfeaturemanager.AdminFeatureValueConfiguration';
+    private $service;
+
+    public function __construct(TranslatorInterface $translator, array $locales, BulkFeatureManagerService $service)
+    {
+        parent::__construct($translator, $locales);
+        $this->service = $service;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('unit_feature_id', ChoiceType::class, [
                 'label' => $this->trans('Unit feature name', self::domainTranslation),
-                'choices' => $this->getFeatures(),
+                'choices' => $this->service->getFeatures(),
                 'constraints' => [
                     new Assert\Length([
                         'max' => 255,
@@ -53,19 +63,6 @@ class UnitFeatureValueConfigurationFormType extends TranslatorAwareType
                 ],
             ])
         ;
-    }
-
-    protected function getFeatures(){
-        $features = [];
-        $sql = "SELECT id_unit_feature, unit_feature_name FROM " . _DB_PREFIX_ . "unit_feature";
-        $res = Db::getInstance()->executeS($sql);
-
-        foreach($res as $row){
-            $rowName = $row['unit_feature_name'] . ' (id:'.$row['id_unit_feature'] .' )';
-            $features[$rowName] = $row['id_unit_feature'];
-        }
-
-        return $features;
     }
 
 }

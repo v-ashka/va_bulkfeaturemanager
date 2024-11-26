@@ -22,18 +22,33 @@ class GridFeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
+    /**
+     * Set feature id for route redirection purpose
+     * @param int $featureId
+     * @return void
+     */
     public function setFeatureId(int $featureId){
         $this->featureId = $featureId;
     }
+
+    /**
+     * Create grid query builder with filter dependencies
+     * @param array $filters
+     * @return QueryBuilder
+     */
     private function getGridQueryBuilder(array $filters){
+//        Allowed values to filter
         $allowedFilters = [
             'id_unit_feature_value',
             'value'
         ];
+//        Create DBAL query builder
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'unit_feature_value', 'ufv');
         $qb->where("ufv.`id_unit_feature` = :id_unit_feature");
         $qb->setParameter(':id_unit_feature', $this->featureId);
+
+//        Select filtered values in grid
         foreach ($filters as $name => $value){
             if(!in_array($name, $allowedFilters, true)){
                 continue;
@@ -52,19 +67,30 @@ class GridFeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Select fields to query in grid.
+     * You must select the columns that were provided in GridDefinitionFactory
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return QueryBuilder
+     */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
         $qb->select('ufv.id_unit_feature_value', 'ufv.value');
 
+//        Add pagination and sorting functionality to grid
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
         ;
-
+//       Return query builder
         return $qb;
     }
-
+    /**
+     * Display amount of elements in grid
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return QueryBuilder
+     */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());

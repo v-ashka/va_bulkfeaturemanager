@@ -8,6 +8,10 @@ class GridFeatureValueFilters extends Filters
 
     protected $filterId = GridFeatureValueDefinitionFactory::GRID_ID;
 
+    /**
+     * Get defaults filter values
+     * @return int[]
+     */
     public static function getDefaults(): array
     {
         return [
