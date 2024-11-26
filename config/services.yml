@@ -8,8 +8,10 @@ services:
     public: true
     tags:
       - { name: form.type }
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service'
 
-# form data provider - featuremanager
+  # form data provider - featuremanager
   prestashop.module.va_bulkfeaturemanager.form.bulkfeaturemanager_data_provider:
     class: 'Va_bulkfeaturemanager\Form\BulkFeatureManagerDataProvider'
 
@@ -184,6 +186,8 @@ services:
     public: true
     tags:
       - { name: form.type }
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service'
   #2
   prestashop.module.va_bulkfeaturemanager.form.unitfeaturevalueconfiguration.data_provider:
     class: 'Va_bulkfeaturemanager\Form\UnitFeatureValueConfiguration\UnitFeatureValueConfigurationDataProvider'
@@ -228,14 +232,14 @@ services:
     public: true
     tags:
       - { name: form.type}
+    arguments:
+      - '@prestashop.module.va_bulkfeaturemanager.service.bulkfeaturemanager_service'
 
   #2
   prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider:
     class: 'Va_bulkfeaturemanager\Form\AdminProductsExtraConfiguration\UnitFeatureProductsExtraDataProvider'
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository'
-      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository'
-      - '@prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository'
 
   prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'

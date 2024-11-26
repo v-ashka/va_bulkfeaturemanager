@@ -25,34 +25,45 @@ class UnitFeatureValueDataHandler implements FormDataHandlerInterface
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * Create new feature value to specified feature
+     * @param array $data
+     * @return int|mixed
+     */
     public function create(array $data)
     {
         $unitFeatureValue = new UnitFeatureValue();
-
-
         $unitFeatureValue->setValue($data['unit_feature_value']);
 
+//      Find existing feature by unit_feature_id
         $unitFeature = $this->unitFeatureRepository->findOneById($data['unit_feature_id']);
-
         $unitFeatureValue->setUnitFeature($unitFeature);
+
+//        Save data to database
         $this->entityManager->persist($unitFeatureValue);
         $this->entityManager->flush();
-
         return $unitFeatureValue->getId();
     }
 
+    /**
+     * Modify and update feature value depend on featureId
+     * @param $id
+     * @param array $data
+     * @return mixed
+     */
     public function update($id, array $data)
     {
+//      Find feature value depends on feature value id, and set to new value
         $unitFeatureValue = $this->unitFeatureValueRepository->findOneById($id);
         $unitFeatureValue->setValue($data['unit_feature_value']);
 
+//      Find feature depends on featureId, and update this field with new value.
         $unitFeature = $this->unitFeatureRepository->findOneById($data['unit_feature_id']);
         $unitFeatureValue->setUnitFeature($unitFeature);
 
-//        $unitFeatureValue->setUnitFeature($idFeatureValue);
+//      Update data in database.
         $this->entityManager->persist($unitFeatureValue);
         $this->entityManager->flush();
-
         return $unitFeatureValue->getId();
     }
 }

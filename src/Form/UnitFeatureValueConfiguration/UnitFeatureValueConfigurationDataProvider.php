@@ -14,12 +14,15 @@ class UnitFeatureValueConfigurationDataProvider implements FormDataProviderInter
         $this->featureValueRepository = $featureValueRepository;
     }
 
-
+    /**
+     * Get feature value data, by providing featureValueId
+     * @param $featureValueId
+     * @return array
+     */
     public function getData($featureValueId): array
     {
+//        Find if feature value exists with that id
        $featureValue = $this->featureValueRepository->findOneById($featureValueId);
-
-
        return
        [
            'unit_feature_id' => $featureValue->getUnitFeature()->getId(),
@@ -27,6 +30,10 @@ class UnitFeatureValueConfigurationDataProvider implements FormDataProviderInter
        ];
     }
 
+    /**
+     * Get default value
+     * @return string[]
+     */
     public function getDefaultData()
     {
         return [

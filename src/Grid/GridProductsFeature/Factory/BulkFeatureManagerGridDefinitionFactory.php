@@ -25,11 +25,19 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
         return self::GRID_ID;
     }
 
+    /**
+     * Get product name
+     * @return string
+     */
     protected function getName()
     {
         return $this->trans('Products with features', [], 'Admin.Advparameters.Feature');
     }
 
+    /**
+     * Display columns in grid (id_product, name, category, feature_id_name, feature_value) and action (display product page)
+     * @return ColumnCollection|\PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface
+     */
     protected function getColumns()
     {
         return (new ColumnCollection())
@@ -87,6 +95,10 @@ class BulkFeatureManagerGridDefinitionFactory extends AbstractGridDefinitionFact
 
     }
 
+    /**
+     * Add Bulk action buttons
+     * @return BulkActionCollection|\PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface
+     */
     protected function getBulkActions(){
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('action_feature'))

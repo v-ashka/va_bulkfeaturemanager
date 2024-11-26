@@ -24,7 +24,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
 {
 
-
     const GRID_ID = 'gridFeatureValueList';
     const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureValueList';
     /**
@@ -32,26 +31,46 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $featureId;
 
+    /**
+     * Get grid id
+     * @return string
+     */
     protected function getId(): string
     {
         return self::GRID_ID;
     }
 
+    /**
+     * Get grid name
+     * @return string
+     */
     protected function getName(): string
     {
         return $this->trans('Feature value list', [], self::GRID_DOMAIN_TRANSLATOR);
     }
 
+    /**
+     * Set featureId for route redirection
+     * @param $featureId
+     * @return int|mixed
+     */
     public function setFeatureId($featureId = 1)
     {
         return $this->featureId = $featureId;
     }
 
+    /**
+     * Get featureId
+     * @return Request
+     */
     public function getFeatureId(){
         return $this->featureId;
     }
 
-
+    /**
+     * Display columns in grid (id_unit_feature_value, value ) and actions (delete, edit)
+     * @return ColumnCollection|\PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface
+     */
     protected function getColumns(){
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
@@ -78,10 +97,15 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
+//                                HTTP method
                                 'method' => 'DELETE',
+//                                route redirection after DELETE method
                                 'route' => "va_bulkfeaturemanager_feature_value_delete",
+//                                route parameters to use
                                 'route_param_name' => "featureValueId",
+//                                route parameter key value
                                 'route_param_field' => "id_unit_feature_value",
+//                                confirmation message
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning')
                             ])
                         )
@@ -89,10 +113,12 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
+//                                route to redirect after select Edit button
                                 'route' => "va_bulkfeaturemanager_feature_value_edit",
+//                                param to send
                                 'route_param_name' => "featureValueId",
+//                                route param key value
                                 'route_param_field' => "id_unit_feature_value",
-//                                'clickable_row' => true,
                             ])
                         )
                 ])
@@ -100,9 +126,9 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
             ;
     }
 
+//    Display filters inputs in grid
     protected function getFilters()
     {
-
         return (new FilterCollection())
             ->add((new Filter('id_unit_feature_value', TextType::class))
                 ->setTypeOptions([
@@ -139,6 +165,7 @@ class GridFeatureValueDefinitionFactory extends AbstractGridDefinitionFactory
             ;
     }
 
+//    Add bulk action to grid
     protected function getBulkActions(){
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('action_feature'))

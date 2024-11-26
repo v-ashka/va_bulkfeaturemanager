@@ -15,20 +15,28 @@ class UnitFeatureConfigurationDataProvider implements FormDataProviderInterface
         $this->repository = $repository;
     }
 
-    //    get data and show them in form (edit)
+    /**
+     * Get data attached to specific featureId and show them in form while editing
+     * @param $featureId
+     * @return array
+     */
     public function getData($featureId)
     {
+//        Find feature by specific id
         $feature = $this->repository->findOneById($featureId);
+//        Return array
         $unitFeature = [
             'unit_feature_name' => $feature->getUnitFeatureName(),
             'unit_feature_shortcut' => $feature->getUnitFeatureShortcut(),
             'unit_feature_base_value' => $feature->getUnitFeatureBaseValue(),
         ];
-
-
         return $unitFeature;
     }
 
+    /**
+     * Return default data in form
+     * @return string[]
+     */
     public function getDefaultData()
     {
         return [

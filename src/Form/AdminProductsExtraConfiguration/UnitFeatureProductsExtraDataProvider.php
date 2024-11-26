@@ -14,47 +14,39 @@ use Va_bulkfeaturemanager\Repository\UnitFeatureValueRepository;
 class UnitFeatureProductsExtraDataProvider implements FormDataProviderInterface
 {
     private $productRepository;
-    private $unitFeatureRepository;
-    private $unitFeatureValueRepository;
 
-    public function __construct(UnitFeatureProductRepository $repository, UnitFeatureRepository $unitFeatureRepository, UnitFeatureValueRepository $unitFeatureValueRepository)
+    public function __construct(UnitFeatureProductRepository $repository)
     {
         $this->productRepository = $repository;
-        $this->unitFeatureRepository = $unitFeatureRepository;
-        $this->unitFeatureValueRepository = $unitFeatureValueRepository;
     }
 
-    public function getData($id)
+    /**
+     * Get data by product id
+     * @param $id
+     * @return array|string[]
+     */
+    public function getData($id): array
     {
-//        dd($this->repository);
-//        dd($this->repository->findBy(['idProductAttribute' => $id]), $id);
+//        Find feature values in provided product id
         $featureProductRepository = $this->productRepository->findOneBy(['idProductAttribute' => $id]);
-        $extraAdminUnitFeature = [];
         if($featureProductRepository != null) {
+//            If exists fetch values from database
             $extraAdminUnitFeature = [
-//                'id' => $featureProductRepository->getId(),
                 'feature_id' => $featureProductRepository->getUnitFeature()->getId(),
                 'feature_id_val' => $featureProductRepository->getUnitFeatureValue()->getId(),
-//                'id_product' => $featureProductRepository->getidProductAttribute(),
             ];
-            dump($featureProductRepository);
-//            dd($featureProduct);
-//            $unitFeatureRepository = $this->unitFeatureRepository->findOneById($featureProduct['id_unit_feature']);
-//            $unitFeatureValueRepository = $this->unitFeatureValueRepository->findOneById('id_unit_feature_value');
-
-//            $extraAdminUnitFeature = [
-//                'feature_id' => $featureProduct->getUnitFeature(),
-//                'feature_id_val' => $featureProduct->getUnitFeatureValue()
-//            ];
         }else{
+//            If not exists get default data
            $extraAdminUnitFeature = $this->getDefaultData();
         }
-//        dd($featureProductRepository, $featureProductRepository->getUnitFeature()->getId(), $this->productRepository->findAll());
-
         return $extraAdminUnitFeature;
     }
 
-    public function getDefaultData()
+    /**
+     * Return default data
+     * @return string[]
+     */
+    public function getDefaultData(): array
     {
         return [
             'feature_id' => '',

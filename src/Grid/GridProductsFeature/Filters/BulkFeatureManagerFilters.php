@@ -18,12 +18,13 @@ class BulkFeatureManagerFilters extends Filters
     protected $filterId = BulkFeatureManagerGridDefinitionFactory::GRID_ID;
 
     /**
-     * {@inheritdoc}
+     * Get defaults filter values
+     * @return int[]
      */
     public static function getDefaults()
     {
         return [
-            'limit' => 55,
+            'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_product',
             'sortOrder' => 'asc',

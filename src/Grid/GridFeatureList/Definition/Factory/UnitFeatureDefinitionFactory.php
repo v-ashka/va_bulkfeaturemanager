@@ -21,18 +21,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
 {
 
+
     const GRID_ID = 'gridFeatureList';
     const GRID_DOMAIN_TRANSLATOR = 'Modules.Va_bulkfeaturemanager.GridFeatureList';
+//    Get grid id
     protected function getId(): string
     {
         return self::GRID_ID;
     }
-
+//  Get grid name
     protected function getName(): string
     {
         return $this->trans('Feature List', [], 'Modules.Va_bulkfeaturemanager.GridFeatureList');
     }
 
+//    Display grid columns (id_unit_feature, unit_feature_name, unit_feature_shortcut, unit_feature_base_value) with action buttons (show, delete, edit)
     protected function getColumns()
     {
         return (new ColumnCollection())
@@ -103,16 +106,21 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
             ;
     }
 
+//    Show filter fields to search through queries
     protected function getFilters()
     {
         return (new FilterCollection())
             ->add((new Filter('id_unit_feature', TextType::class))
                 ->setTypeOptions([
+//                    if field required
                     'required' => false,
+//                    column attributes
                     'attr' => [
+//                        add placeholder to input
                         'placeholder' => $this->trans('ID', [], 'Admin.Advparameters.Feature')
                     ]
                 ])
+//                set filter column to specific column
                 ->setAssociatedColumn('id_unit_feature')
             )
             ->add((new Filter('unit_feature_name', TextType::class))
@@ -145,10 +153,13 @@ class UnitFeatureDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
+//                    set reset_route -> admin_common_reset is common reset route
                     'reset_route' => 'admin_common_reset_search_by_filter_id',
+//                    send reset route params to search controller
                     'reset_route_params' => [
                         'filterId' => self::GRID_ID
                     ],
+//                    route to redirect after search
                     'redirect_route' => 'va_bulkfeaturemanager_features_list',
                 ])
             )

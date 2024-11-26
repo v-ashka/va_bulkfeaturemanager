@@ -23,6 +23,12 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
+
+    /**
+     * Get query search result from grid
+     * @param array $filters
+     * @return QueryBuilder
+     */
     private function getGridQueryBuilder(array $filters): QueryBuilder{
 
         $allowedFilters = [
@@ -53,14 +59,20 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Select fields to query in grid.
+     * You must select the columns that were provided in GridDefinitionFactory
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return QueryBuilder
+     */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+//        create query builder on search criteria
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
+//        Select id_unit_feature, feature_name, feature_shortcut and feature_base_value to display values in grid
+        $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut, uf.unit_feature_base_value');
 
-        $qb->select('uf.id_unit_feature, uf.unit_feature_name, uf.unit_feature_shortcut, uf.unit_feature_base_value')
-//            ->groupBy('uf.id_unit_feature')
-        ;
-
+//        add pagination and sorting to grid
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
@@ -69,6 +81,11 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Display amount of elements in grid
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return QueryBuilder
+     */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getGridQueryBuilder($searchCriteria->getFilters());
