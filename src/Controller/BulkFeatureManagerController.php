@@ -144,7 +144,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         }
 
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/index.html.twig', [
-            'layoutTitle' => $this->trans('Bulk Feature Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
+            'layoutTitle' => $this->trans('Unit Price Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
             'bulkFeatureManagerForm' => $resForm->createView(),
             'gridForm' => $this->presentGrid($featureProductsGrid)
 
@@ -447,17 +447,25 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $featuresValue[0]->getUnitFeature()->getId()]);
     }
 
-    public function exportFile(Request $request){
+    public function exportFileFeatureProducts(){
         $service = $this->get('prestashop.module.va_bulkfeaturemanager.service.export_unit_features');
-
-        $dataCallback = [
-//            TODO - Fetch data from db
-            ["name" => "My product A", "brand" => "Brand 1", "price" => 2204, "ignored_data" => "abcd"],
-            ["name" => "My product B", "brand" => "Brand 2", "price" => 1399, "ignored_data" => "efgh"],
-            ["name" => "My product C", "brand" => "Brand 3", "price" => 687, "ignored_data" => "ijkl"]
-        ];
+        $featureProductRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_product_repository');
 
         $this->redirectToRoute('va_bulkfeaturemanager');
-        return $service->exportFeatureProduct($dataCallback);
+         return $service->exportFeatureProduct($featureProductRepository);
+    }
+
+    public function exportFileFeature(){
+        $service = $this->get('prestashop.module.va_bulkfeaturemanager.service.export_unit_features');
+        $featureRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_configuration_repository');
+        $this->redirectToRoute('va_bulkfeaturemanager');
+        return $service->exportFeatures($featureRepository);
+    }
+
+    public function exportFileFeatureValue(){
+        $service = $this->get('prestashop.module.va_bulkfeaturemanager.service.export_unit_features');
+        $featureValueRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository');
+        $this->redirectToRoute('va_bulkfeaturemanager');
+        return $service->exportFeatureValues($featureValueRepository);
     }
 }
