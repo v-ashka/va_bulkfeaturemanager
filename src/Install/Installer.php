@@ -61,8 +61,10 @@ class Installer {
                 'displayProductAdditionalInfo',
                 // Display additional fields in product admin panel
                 'displayAdminProductsExtra',
-                // Action performed after saving a product in admin panel
+                // Action performed after saving a product in admin panel (ver. < 8.1 Prestashop)
                 'actionAdminProductsControllerSaveAfter',
+                // Action performed after saving a product in admin panel (ver. > 8.1 Prestashop)
+                'actionProductFormBuilderModifier'
 
             ];
             // Register all defined hooks

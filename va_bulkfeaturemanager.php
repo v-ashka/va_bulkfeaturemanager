@@ -198,6 +198,7 @@ class Va_bulkfeaturemanager extends Module
 
     /**
      * Save set values in form and send to feature product service
+     * Backward compatibility with PrestaShop ver. < 8.1
      * @param $params
      * @return void
      * @throws Exception
@@ -214,5 +215,23 @@ class Va_bulkfeaturemanager extends Module
         $unitFeatureProductFormHandler->update((int) $id, $data);
     }
 
+    /**
+     * Save set values in form and send to feature product service (For PrestaShop ver. >= 8.1 )
+     * @param $params
+     * @return void
+     * @throws Exception
+     */
+    public function hookActionProductFormBuilderModifier($params){
+        // Get feature product form handler service class
+        $unitFeatureProductFormHandler = $this->get('prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.unit_feature_products_extra.data_handler');
+        // Get array values with keys: feature_id and feature_value_id from 'unit_feature_products_extra_form' form
+        // (ex. ["feature_id" => "1", "feature_val_id" => "2"] )
+        $data = Tools::getValue('unit_feature_products_extra_form');
+        // Get product id
+        $id = Tools::getValue('id_product');
+        // Send saved data to update method
+        if($data !== false)
+            $unitFeatureProductFormHandler->update((int) $id, $data);
+    }
 
 }
