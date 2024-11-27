@@ -446,4 +446,18 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         }
         return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $featuresValue[0]->getUnitFeature()->getId()]);
     }
+
+    public function exportFile(Request $request){
+        $service = $this->get('prestashop.module.va_bulkfeaturemanager.service.export_unit_features');
+
+        $dataCallback = [
+//            TODO - Fetch data from db
+            ["name" => "My product A", "brand" => "Brand 1", "price" => 2204, "ignored_data" => "abcd"],
+            ["name" => "My product B", "brand" => "Brand 2", "price" => 1399, "ignored_data" => "efgh"],
+            ["name" => "My product C", "brand" => "Brand 3", "price" => 687, "ignored_data" => "ijkl"]
+        ];
+
+        $this->redirectToRoute('va_bulkfeaturemanager');
+        return $service->exportFeatureProduct($dataCallback);
+    }
 }
