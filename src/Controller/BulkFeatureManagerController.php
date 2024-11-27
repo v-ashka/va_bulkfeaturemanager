@@ -6,8 +6,10 @@ namespace Va_bulkfeaturemanager\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Va_bulkfeaturemanager\Entity\UnitFeature;
+use Va_bulkfeaturemanager\Form\ImportForm\ImportFormType;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Definition\Factory\UnitFeatureDefinitionFactory;
 use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
 use Va_bulkfeaturemanager\Grid\GridFeatureValueList\Definition\Factory\GridFeatureValueDefinitionFactory;
@@ -467,5 +469,95 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         $featureValueRepository = $this->get('prestashop.module.va_bulkfeaturemanager.repository.unit_feature_value_configuration_repository');
         $this->redirectToRoute('va_bulkfeaturemanager');
         return $service->exportFeatureValues($featureValueRepository);
+    }
+
+    public function importIndexAction(Request $request){
+        $form = $this->get('form.factory')->createNamed(
+            '',
+            ImportFormType::class,
+            $this->getImportDefaultSettings(),
+            [
+                'attr' => [
+                    'id' => 'import-features-product-form'
+                ]
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $this->addFlash('success', $this->trans('Successful import', 'Admin.Va_bulkfeaturemanager.Success'));
+        }
+
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/import/import-index.html.twig', [
+            'form' => $form->createView(),
+            'layoutTitle' => $this->trans('Import features from file', 'Modules.Va_bulkfeaturemanager.Import')
+        ]);
+    }
+
+    public function importFile(Request $request){
+        $uploadedFeatureFile = $request->files->get('feature_file');
+        $uploadedFeatureValuesFile = $request->files->get('feature_values_file');
+        $uploadedFeatureProductsFile = $request->files->get('feature_products_file');
+        if(!$uploadedFeatureFile instanceof UploadedFile || !$uploadedFeatureValuesFile instanceof UploadedFile  || !$uploadedFeatureProductsFile instanceof UploadedFile ){
+            $this->addFlash('error', $this->trans('One of file was not uploaded', 'Admin.Va_bulkfeaturemanager.Import'));
+            return false;
+        }
+        $fileUploader = $this->get('prestashop.core.import.file_uploader');
+        try{
+            $fileFeature = $fileUploader->upload($uploadedFeatureFile);
+        }catch (\Exception $e){
+            return $this->json(['feature file error' => $e->getMessage()]);
+        }
+
+        try{
+            $fileFeatureValues = $fileUploader->upload($uploadedFeatureValuesFile);
+        }catch (\Exception $e){
+            return $this->json(['feature values file error' => $e->getMessage()]);
+        }
+
+        try{
+            $fileProductFeatures = $fileUploader->upload($uploadedFeatureProductsFile);
+        }catch (\Exception $e){
+            return $this->json(['feature product file error' => $e->getMessage()]);
+        }
+
+        $res['fileFeature'] = [
+            'name' => $fileFeature['name'],
+            'size' => $fileFeature['size'],
+        ];
+
+        $res['fileFeatureValues'] = [
+            'name' => $fileFeatureValues['name'],
+            'size' => $fileFeatureValues['size'],
+        ];
+
+        $res['fileProductFeatures'] = [
+            'name' => $fileProductFeatures['name'],
+            'size' => $fileProductFeatures['size'],
+        ];
+        return $this->json($res);
+    }
+
+    public function importFileProcess(Request $request){
+        $importRequestValidator = $this->get('prestashop.core.import.request_validator');
+        $importer = $this->get('prestashop.core.import.importer');
+        $importConfigFactory = $this->get('prestashop.core.import.config_factory');
+        $runtimeConfigFactory = $this->get('prestashop.core.import.runtime_config_factory');
+
+        try{
+            $importRequestValidator->validate($request);
+        }catch (\Exception $e){
+            $this->addFlash('error', $this->trans('Before importing, upload file first', 'Admin.Va_bulkfeaturemanager.Import'));
+            return false;
+        }
+
+        $request->request->set('type_value', ['id']);
+
+
+
+
+
+
     }
 }
