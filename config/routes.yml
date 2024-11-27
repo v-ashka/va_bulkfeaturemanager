@@ -92,3 +92,9 @@ va_bulkfeaturemanager_feature_value_delete_bulk:
   methods: POST
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteBulkFeatureValue'
+
+va_bulkfeaturemanager_export:
+  path: va_bulkfeaturemanager/configuration/export
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::exportFile'
