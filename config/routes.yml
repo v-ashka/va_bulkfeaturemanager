@@ -93,8 +93,20 @@ va_bulkfeaturemanager_feature_value_delete_bulk:
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::deleteBulkFeatureValue'
 
-va_bulkfeaturemanager_export:
-  path: va_bulkfeaturemanager/configuration/export
-  methods: [GET, POST]
+va_bulkfeaturemanager_export_products:
+  path: va_bulkfeaturemanager/configuration/exportProducts
+  methods: [GET]
   defaults:
-    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::exportFile'
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::exportFileFeatureProducts'
+
+va_bulkfeaturemanager_export_features:
+  path: va_bulkfeaturemanager/configuration/exportFeatures
+  methods: [GET]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::exportFileFeature'
+
+va_bulkfeaturemanager_export_featureValues:
+  path: va_bulkfeaturemanager/configuration/exportValues
+  methods: [GET]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::exportFileFeatureValue'
