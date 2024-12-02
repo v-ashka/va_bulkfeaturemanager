@@ -276,3 +276,12 @@ services:
     public: true
     arguments:
       - '@prestashop.module.va_bulkfeaturemanager.form.admin_products_extra_configuration.data_provider'
+
+# import feature form
+  prestashop.module.va_bulkfeaturemanager.form.import.form_type:
+    class: 'Va_bulkfeaturemanager\Form\ImportForm\ImportFormType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Va_bulkfeaturemanager\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -413,7 +414,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         }else{
             $this->addFlash('error', $this->trans('This feature value does not exist', 'Admin.Va_bulkfeaturemanager.Feature'));
         }
-        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $feature->getUnitFeature()->getId()]);
+        return $this->redirectToRoute('va_bulkfeaturemanager_feature_values', ['featureId' => $featureValue->getUnitFeature()->getId()]);
     }
 
     /**
@@ -489,13 +490,16 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             $this->addFlash('success', $this->trans('Successful import', 'Admin.Va_bulkfeaturemanager.Success'));
         }
 
-        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/import/import-index.html.twig', [
+        return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/form/import/import-index.html.twig', [
             'form' => $form->createView(),
+            'import_process_url' => $this->generateUrl('va_bulkfeaturemanager_import_process'),
+            'import_file_upload' => $this->generateUrl('va_bulkfeaturemanager_import_upload'),
+            'maxUploadSize' => $this->get('prestashop.core.configuration.ini_configuration')->getUploadMaxSizeInBytes(),
             'layoutTitle' => $this->trans('Import features from file', 'Modules.Va_bulkfeaturemanager.Import')
         ]);
     }
 
-    public function importFile(Request $request){
+    public function uploadFile(Request $request){
         $uploadedFeatureFile = $request->files->get('feature_file');
         $uploadedFeatureValuesFile = $request->files->get('feature_values_file');
         $uploadedFeatureProductsFile = $request->files->get('feature_products_file');
@@ -552,12 +556,34 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             return false;
         }
 
-        $request->request->set('type_value', ['id']);
+        $request->request->set('header_product_feater', ['id, id_unit_feature, id_unit_feature_value, id_product, id_product_attribute']);
 
+        $importConfig = $importConfigFactory->buildFromRequest($request);
+        $runtimeConfig = $runtimeConfigFactory->buildFromRequest($request);
 
+        $importer->import(
+            $importConfig,
+            $runtimeConfig,
+            $this->get('prestashop.adapter.command_handler.update_product_price_in_cart_handler')
+        );
 
+        return $this->json($runtimeConfig->toArray());
 
+    }
 
-
+    public function getImportDefaultSettings(){
+        return [
+            'skip' => 1,
+            'sendemail' => false,
+            'forceIDs' => false,
+            'match_ref' => false,
+            'regenerate' => false,
+            'truncate' => false,
+            'multiple_value_separator' => ImportSettings::DEFAULT_MULTIVALUE_SEPARATOR,
+            'separator' => ImportSettings::DEFAULT_SEPARATOR,
+            'iso_lang' => 'pl',
+            'entity' => 1,
+            'price_tin' => false,
+        ];
     }
 }

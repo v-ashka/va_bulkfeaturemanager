@@ -1,0 +1,41 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+
+{% block content_header %}
+  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/top_menu.html.twig' %}
+{% endblock %}
+
+{% block content %}
+  <span>max upload size: {{ maxUploadSize }} bytes</span>
+  {{ dump(import_file_upload) }}
+  {{ dump(import_process_url) }}
+  {{ form_start(form) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Import values'|trans({}, 'Modules.BoxManagement.Admin') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(form) }}
+      </div>
+    </div>
+    {{ form_widget(form.entity) }}
+    {{ form_widget(form.iso_lang) }}
+    {{ form_widget(form.multiple_value_separator) }}
+    {{ form_widget(form.truncate) }}
+    {{ form_widget(form.regenerate) }}
+    {{ form_widget(form.match_ref) }}
+    {{ form_widget(form.forceIDs) }}
+    {{ form_widget(form.sendemail) }}
+    {{ form_widget(form.csv, {'attr': {'class': 'js-import-file-input'}}) }}
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary float-right" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(form) }}
+
+{% endblock %}
