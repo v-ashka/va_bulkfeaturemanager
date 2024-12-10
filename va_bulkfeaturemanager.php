@@ -52,7 +52,7 @@ class Va_bulkfeaturemanager extends Module
     {
         $this->name = 'va_bulkfeaturemanager';
         $this->tab = 'administration';
-        $this->version = '2.1.0';
+        $this->version = '2.1.1';
         $this->author = 'Marcin Wijaszka';
         $this->need_instance = 0;
 
