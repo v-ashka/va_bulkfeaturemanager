@@ -18,22 +18,28 @@ class ImportFormType extends TranslatorAwareType
     const domainTranslator = 'Va_bulkfeaturemanager.Modules.Import.FormType';
     public function buildForm(FormBuilderInterface $builder, array $options){
     $builder
+        ->add('import_type', ChoiceType::class, [
+            'label' => $this->trans('Choose what do you want to import', self::domainTranslator),
+            'choices' => [
+                $this->trans('Features', self::domainTranslator) => 0,
+                $this->trans('Feature values', self::domainTranslator) => 1,
+                $this->trans('Products attached to features', self::domainTranslator) => 2,
+            ],
+            'constraints' => [
+                new Assert\NotBlank(),
+            ],
+            'help' => $this->trans('If you want to import new features with attached products, you should import files in correct order.', self::domainTranslator),
+        ])
             ->add('feature_file', FileType::class, [
-                'label' => $this->trans('Feature file', self::domainTranslator),
-            ])
-            ->add('feature_values_file', FileType::class, [
-                'label' => $this->trans('Feature values file', self::domainTranslator),
-            ])
-            ->add('feature_products_file', FileType::class, [
-                'label' => $this->trans('Feature values products file', self::domainTranslator),
+                'label' => $this->trans('Select a file to import', self::domainTranslator),
             ])
             ->add('skip', SwitchType::class, [
-                'label' => $this->trans('Skip first row if head', 'Modules.Bulkpriceupdater.Admin'),
+                'label' => $this->trans('Skip first row if head', self::domainTranslator),
                 'required' => true,
                 'empty_data' => 1,
             ])
             ->add('separator', TextType::class, [
-                'label' => $this->trans('Csv file separator', 'Modules.Bulkpriceupdater.Admin'),
+                'label' => $this->trans('Csv file separator', self::domainTranslator),
                 'required' => true,
                 'empty_data' => ImportSettings::DEFAULT_SEPARATOR,
             ])
@@ -43,7 +49,12 @@ class ImportFormType extends TranslatorAwareType
             ->add('truncate', HiddenType::class)
             ->add('regenerate', HiddenType::class)
             ->add('match_ref', HiddenType::class)
-            ->add('forceIDs', HiddenType::class)
+            ->add('forceIDs', SwitchType::class, [
+                'label' => $this->trans('Force all ids', self::domainTranslator),
+                'required' => true,
+                'empty_data' => false,
+                'help' => $this->trans('Enable this option if you want to preserve the identifiers of imported elements (their ID), otherwise PrestaShop will ignore them and continue to automatically assign sequential numbers.', self::domainTranslator),
+            ])
             ->add('sendemail', HiddenType::class)
             ->add('csv', HiddenType::class)
             ;
