@@ -285,3 +285,22 @@ services:
     tags:
       - { name: form.type }
 
+# import adapter
+  prestashop.module.va_bulkfeaturemanager.adapter.import.handler.import_feature_handler:
+    class: 'Va_bulkfeaturemanager\Adapter\Import\Handler\ImportFeatureHandler'
+    arguments:
+      - '@prestashop.adapter.import.data_formatter'
+      - '@=service("prestashop.adapter.shop.context").getAllShopIds()'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().shop.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Feature\\MultistoreFeature").isUsed()'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.id'
+      - '@translator'
+      - '@prestashop.adapter.legacy.logger'
+      - '@=service("prestashop.adapter.data_provider.employee").getId()'
+      - '@prestashop.adapter.database'
+      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+      - '@PrestaShop\PrestaShop\Adapter\Configuration'
+      - '@prestashop.adapter.validate'
+      - '@doctrine.orm.entity_manager'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'

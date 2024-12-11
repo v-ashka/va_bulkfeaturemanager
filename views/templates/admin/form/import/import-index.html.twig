@@ -6,17 +6,130 @@
 {% endblock %}
 
 {% block content %}
-  <span>max upload size: {{ maxUploadSize }} bytes</span>
-  {{ dump(import_file_upload) }}
-  {{ dump(import_process_url) }}
-  {{ form_start(form) }}
+  {{ form_start(form, {'attr': {'data-file-upload-url': import_file_upload, 'class': 'js-import-form'}}) }}
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Import values'|trans({}, 'Modules.BoxManagement.Admin') }}
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
-        {{ form_widget(form) }}
+        {# Import file choice#}
+        <div class="form-group row">
+          <label class="form-control-label" for="input2">{{ form.import_type.vars.label }}</label>
+          <div class="col-sm">
+            {{ form_errors(form.import_type) }}
+            {{ form_widget(form.import_type, {'attr' : {'class': 'js-choose-import-type'}}) }}
+            <div class="alert alert-info mt-2" role="alert">
+              <p class="alert-text">{{  "Accepted column names:"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import')}}</p>
+              {# Features #}
+              <div class="choose-import-text d-none">
+                <p class="alert-text">Table: Features</p>
+                <p class="alert-text">id_unit_feature; unit_feature_name; unit_feature_shortcut; unit_feature_base_value</p>
+                <br>
+                <ul>
+                  <li>id_unit_feature - {{ "Id unit feature (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>unit_feature_name - {{ "Feature name (string)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>unit_feature_shortcut - {{ "Feature shortcut (string)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>unit_feature_base_value - {{ "Feature base value to calculate unit price (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                </ul>
+              </div>
+              {# Features values #}
+              <div class="choose-import-text d-none">
+                <p class="alert-text">Table: Feature values</p>
+                <p class="alert-text">id_unit_feature_value; id_unit_feature; value</p>
+                <br>
+                <ul>
+                  <li>id_unit_feature_value - {{ "Id of feature value unit (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>id_unit_feature - {{ "Id of unit feature (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>value - {{ "Value (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                </ul>
+              </div>
+              {# Product features #}
+              <div class="choose-import-text d-none">
+                <p class="alert-text">Table: Products attached to features</p>
+                <p class="alert-text">id; id_unit_feature; id_unit_feature_value; id_product; id_product_attribute</p>
+                <br>
+                <ul>
+                  <li>id - {{ "unique id (int) "|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>id_unit_feature - {{ "Id of unit feature (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>id_unit_feature_value - {{ "Id of feature value unit (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                  <li>id_product - {{ "Id product (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+{#                  <li>id_product_attribute - {{ "Product id attribute for combinations (int)"|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>#}
+                </ul>
+              </div>
+
+            </div>
+            <div class="alert alert-warning mt-2" role="alert">
+              <p class="alert-text">
+                {{ form_help(form.import_type) }}</p>
+                <p>{{ 'Correct import order is:'|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</p>
+                    <ol>
+                      <li>{{ 'Features'|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                      <li>{{ 'Features values'|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                      <li>{{ 'Products attached to features'|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</li>
+                    </ol>
+                <span>{{ 'You can also import products attached to features if you have already correctly added features with values, corresponding to the IDs in the import file'|trans({}, 'Modules.Va_bulkfeaturemanager.Admin.Import') }}</span>
+            </div>
+          </div>
+        </div>
+
+
+        {# Feature file#}
+        <div class="form-group row">
+          <label class="form-control-label" for="input1">{{ form.feature_file.vars.label }}</label>
+          <div class="col-sm js-file-upload-input-wrapper">
+            {{ form_errors(form.feature_file) }}
+            {{ form_widget(form.feature_file, {'attr': {'class': 'js-import-file form-control form-control-lg', 'data-max-file-upload-size': maxUploadSize}}) }}
+          </div>
+
+          <div class="col-sm">
+            <div class="alert alert-danger d-none js-import-file-error" role="alert">
+              <p class="alert-text">
+                <strong class="js-file-data"></strong>: <span class="js-error-message"></span>
+              </p>
+            </div>
+
+            <div class="alert alert-success d-none js-import-file-alert" role="alert">
+              <button type="button"
+                      class="close btn btn-outline-secondary js-change-import-file-btn"
+                      aria-label="{{ 'Change'|trans({}, 'Admin.Actions') }}"
+              >
+                <span aria-hidden="true"><i class="material-icons">edit</i></span>
+              </button>
+              <p class="alert-text js-import-file"></p>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <label class="form-control-label" for="input2">{{ form.skip.vars.label }}</label>
+          <div class="col-sm">
+            {{ form_errors(form.skip) }}
+            {{ form_widget(form.skip) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label" for="input3">{{ form.separator.vars.label }}</label>
+          <div class="col-sm">
+            {{ form_errors(form.separator) }}
+            {{ form_widget(form.separator) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label" for="input3">{{ form.forceIDs.vars.label }}</label>
+          <div class="col-sm">
+            {{ form_errors(form.forceIDs) }}
+            {{ form_widget(form.forceIDs) }}
+            <div class="alert alert-warning mt-2" role="alert">
+              <p class="alert-text">{{ form_help(form.forceIDs) }}</p>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
     {{ form_widget(form.entity) }}
@@ -25,19 +138,20 @@
     {{ form_widget(form.truncate) }}
     {{ form_widget(form.regenerate) }}
     {{ form_widget(form.match_ref) }}
-    {{ form_widget(form.forceIDs) }}
     {{ form_widget(form.sendemail) }}
     {{ form_widget(form.csv, {'attr': {'class': 'js-import-file-input'}}) }}
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary float-right" id="save-button">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
+        <button disabled class="btn btn-primary js-process-import" data-import_url="{{ import_process_url }}">{{ "Import file"|trans({}, 'Admin.Actions')}}</button>
       </div>
     </div>
   </div>
-  <script src="{{ asset('../modules/va_bulkfeaturemanager/views/js/va_bulkfeaturemanager.import.bundle.js')}}"></script>
-
   {{ form_end(form) }}
 
+  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/form/import/import-modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('../modules/va_bulkfeaturemanager/views/js/va_bulkfeaturemanager.import.bundle.js')}}"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 {
   "name": "va_bulkfeaturemanager",
   "version": "1.0.0",
-  "description": "Va_bulkfeaturemanager import module",
+  "description": "Va_bulkfeaturemanager import module - node v18.20.5",
   "main": "index.js",
   "dependencies": {
     "get-tsconfig": "^4.7.0",

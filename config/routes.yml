@@ -121,7 +121,7 @@ va_bulkfeaturemanager_import_process:
   path: va_bulkfeaturemanager/configuration/import/process
   methods: [POST]
   defaults:
-    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::importIndexAction'
+    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::importFileProcess'
 
 va_bulkfeaturemanager_import_upload:
   path: va_bulkfeaturemanager/configuration/import/upload
