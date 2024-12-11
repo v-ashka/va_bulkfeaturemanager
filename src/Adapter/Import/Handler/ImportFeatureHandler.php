@@ -34,6 +34,7 @@ class ImportFeatureHandler extends AbstractImportHandler
 {
     protected $entityManager;
     protected $productRepository;
+    private $internalCounter = 1;
     public function __construct(
         ImportDataFormatter $dataFormatter,
         array $allShopIds,
@@ -87,7 +88,6 @@ class ImportFeatureHandler extends AbstractImportHandler
         $unitFeatureValueRepository = $this->entityManager->getRepository(UnitFeatureValue::class);
         $unitFeatureRepository = $this->entityManager->getRepository(UnitFeature::class);
 //        $unitFeatureProductRepository = $this->entityManager->getRepository(UnitFeatureProduct::class);
-
         switch ($importType) {
             case 'features':
                 $id = (int) $this->fetchDataValueByKey($dataRow, $runtimeConfig->getEntityFields(), 'id_unit_feature');
@@ -136,11 +136,13 @@ class ImportFeatureHandler extends AbstractImportHandler
                 $unitFeatureValueId = $unitFeatureValueRepository->findOneById($this->fetchDataValueByKey($dataRow, $runtimeConfig->getEntityFields(), 'id_unit_feature_value'));
                 $productId = new Product($this->fetchDataValueByKey($dataRow, $runtimeConfig->getEntityFields(), 'id_product'));
 
+
                 if ($unitFeatureId !== null && $unitFeatureValueId !== null && $productId->id !== null) {
                     if ($forceIds && $id > 0) {
                         // Find exists entity by id
                         $entity = $this->entityManager->getRepository(UnitFeatureProduct::class)->findOneById($id);
                     }
+
 
                     // If entity not exists, create new one
                     if ($entity === null) {
@@ -150,10 +152,40 @@ class ImportFeatureHandler extends AbstractImportHandler
                         }
                     }
                     // Set new values for entity
-                    $entity->setUnitFeatureValue($unitFeatureValueId->getId());
-                    $entity->setUnitFeature($unitFeatureId->getId());
-                    $entity->setIdProductAttribute($productId->id);
-//                    $runtimeConfig->setNumberOfProcessedRows(1);
+
+                    if($unitFeatureValueId->getId() === null){
+                        $this->error($this->translator->trans('Not found specific id for unit feature value', [], 'Modules.Va_bulkfeaturemanager.Admin.Import.Error'));
+                        break;
+                    }
+
+                    if($unitFeatureValueId->getUnitFeature()->getId() !== $unitFeatureId->getId()){
+                        $this->error(
+                            $this->translator->trans(
+                            '[Row %rowNum%]: Invalid unit feature value: The specified ID (%unit_feature_value_id%) does not correspond to any existing feature values for the given unit feature id (%unit_feature_id%)',
+                            [
+                                '%rowNum%' => $this->getInternalCounter(),
+                                '%unit_feature_value_id%' => $unitFeatureValueId->getId(),
+                                '%unit_feature_id%' => $unitFeatureId->getId()
+                            ],
+                            'Modules.Va_bulkfeaturemanager.Admin.Import.Error'));
+                        break;
+                    }
+                    else{
+                        $entity->setUnitFeatureValue($unitFeatureValueId);
+                    }
+
+                    if($unitFeatureId->getId() === null){
+                        $this->error($this->translator->trans('Not found specific id for unit feature value', [], 'Modules.Va_bulkfeaturemanager.Admin.Import.Error'));
+                        break;
+                    }else{
+                        $entity->setUnitFeature($unitFeatureId);
+                    }
+                    if($productId->id === null){
+                        $this->error($this->translator->trans('Not found specific product id', [], 'Modules.Va_bulkfeaturemanager.Admin.Import.Error'));
+                        break;
+                    }else{
+                        $entity->setIdProductAttribute($productId->id);
+                    }
                 }
                 break;
         }
@@ -162,6 +194,8 @@ class ImportFeatureHandler extends AbstractImportHandler
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
         }
+        $this->setInternalCounter(1);
+
     }
 
     public function supports($importEntityType)
@@ -172,4 +206,13 @@ class ImportFeatureHandler extends AbstractImportHandler
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig){
          parent::tearDown($importConfig, $runtimeConfig);
     }
+
+    public function getInternalCounter(){
+        return $this->internalCounter;
+    }
+
+    public function setInternalCounter($counter){
+        $this->internalCounter += $counter;
+    }
+
 }

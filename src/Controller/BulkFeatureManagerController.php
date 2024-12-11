@@ -513,7 +513,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
             $fileUploader = $this->get('prestashop.core.import.file_uploader');
             $fileFeature = $fileUploader->upload($uploadedFile);
         }catch (\Exception $e){
-            return $this->json(['feature file error' => $e->getMessage()]);
+            return $this->json(['error' => $e->getMessage()]);
         }
 
         $res['file'] = [
@@ -576,7 +576,6 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
 
         $importConfig = $importConfigFactory->buildFromRequest($request);
         $runtimeConfig = $runtimeConfigFactory->buildFromRequest($request);
-        dump($runtimeConfig);
 
         $importer->import(
             $importConfig,
