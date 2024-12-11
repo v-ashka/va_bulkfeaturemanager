@@ -30,7 +30,6 @@ export default class Uploader {
       this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
       return;
     }
-
     const data = new FormData();
     data.append('file', uploadedFile);
 
@@ -64,10 +63,10 @@ export default class Uploader {
   showImportFileError(fileName, fileSize, message) {
     const $alert = $('.js-import-file-error');
 
-    const fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
-
+    const fileData = fileName + ' (' + (fileSize) + ' kb)';
     $alert.find('.js-file-data').text(fileData);
     $alert.find('.js-error-message').text(message);
+
     $alert.removeClass('d-none');
   }
 

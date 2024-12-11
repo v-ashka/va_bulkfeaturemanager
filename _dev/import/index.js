@@ -15,6 +15,7 @@ import Importer from '@pages/import-data/Importer';
 import Uploader from "./Uploader";
 const $ = window.$;
 
+showCsvDataExamples('.js-choose-import-type');
 $(() => {
 
   // Fix for Importer.ts setter and getter in progressModal field
@@ -31,7 +32,7 @@ $(() => {
   importer._progressModal = importer.progressModal;
 
   const uploader = new Uploader();
-
+  $(document).on('change', '.js-choose-import-type', () => showCsvDataExamples('.js-choose-import-type'))
   $(document).off('click', '.js-process-import');
   $(document).on('click', '.js-process-import', (e) => importHandler(e));
 
@@ -40,8 +41,11 @@ $(() => {
     importer.progressModal.hide()
     location.reload()
   });
+
   $(document).on('click', 'js-continue-import', () => importer.continueImport());
   $(document).on('change', '.js-import-file', () => {uploader.uploadFile()})
+
+
   function importHandler(e){
     e.preventDefault();
 
@@ -64,3 +68,14 @@ $(() => {
   }
 
 });
+
+  function showCsvDataExamples(elem){
+    $('.choose-import-text').each((index, input) => {
+      input.classList.add('d-none')
+      if(parseInt($(elem)[0].value)=== index){
+        input.classList.remove('d-none')
+
+      }
+
+    })
+  }
