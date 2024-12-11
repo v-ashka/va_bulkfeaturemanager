@@ -4,10 +4,11 @@
   "description": "Va_bulkfeaturemanager import module - node v18.20.5",
   "main": "index.js",
   "dependencies": {
+    "@vue/cli": "^5.0.8",
+    "filemanager-webpack-plugin": "^8.0.0",
     "get-tsconfig": "^4.7.0",
     "loader-utils": "^2.0.4",
-    "webpack-sources": "^1.4.3",
-    "filemanager-webpack-plugin": "^8.0.0"
+    "webpack-sources": "^1.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",

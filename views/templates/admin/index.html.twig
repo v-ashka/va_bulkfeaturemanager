@@ -1,33 +1,38 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Module.YourModule.Admin" %}
+
+{% block stylesheets %}
+  {# include some external stylesheets #}
+{#  <link rel="stylesheet" href="https:/static.example.com/dummy/an-external-stylesheet-example.css" type="text/css" media="all">#}
+  {# include some local stylesheets #}
+{#  <link rel="stylesheet" href="{{ asset('../modules/yourmodule/views/css/app.css') }}" type="text/css" media="all">#}
+{% endblock %}
+
 {% block content %}
-  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid-components.html.twig'%}
-  {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/js_feature_choice_type.html.twig'
-  %}
-  {% block top_menu %}
-    {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/common/top_menu.html.twig' %}
-  {% endblock %}
-  {{ form_start(bulkFeatureManagerForm) }}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Modules.Demosymfonyformsimple.Admin') }}
-    </h3>
-    <div class="card-body">
-      <div class="form-wrapper">
-        {{ form_widget(bulkFeatureManagerForm) }}
-      </div>
-      {% include '@Modules/va_bulkfeaturemanager/views/templates/admin/grid/grid.html.twig' %}
-    </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-primary float-right" id="save-button" type="submit">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
-      </div>
-    </div>
-  </div>
-  {{ form_end(bulkFeatureManagerForm) }}
-  {% block javascripts %}
-    <script src="{{ asset('../modules/va_bulkfeaturemanager/views/js/va_bulkfeaturemanager.utils.bundle.js') }}"></script>
-    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  {% endblock %}
+{#  {{ dump(gridForm) }}#}
+  <div id="app"></div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script>
+    var yourModule = {
+      columns: {{ gridForm.columns|json_encode|raw }},
+      actions: {{ gridForm.actions|json_encode|raw }},
+      data: {{ gridForm.data|json_encode|raw }},
+      pagination: {{ gridForm.pagination|json_encode|raw }},
+      sorting: {{ gridForm.sorting|json_encode|raw }},
+      filters: {{ gridForm.filters|json_encode|raw }},
+      attributes: {{ gridForm.attributes|json_encode|raw }},
+      view_options: {{ gridForm.view_options|json_encode|raw }}
+    };
+  </script>
+
+  {# include some external JavaScript #}
+{#  <script src="https://static.example.com/dummy/an-external-javascript-example.js"></script>#}
+
+  {# include some local JavaScript #}
+  <script src="{{ asset('../modules/va_bulkfeaturemanager/views/vue/js/chunk-vendors.js') }}" async defer></script>
+  <script src="{{ asset('../modules/va_bulkfeaturemanager/views/vue/js/app.js') }}" async defer></script>
 {% endblock %}
