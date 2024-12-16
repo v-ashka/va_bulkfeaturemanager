@@ -32,7 +32,7 @@
   {# include some external JavaScript #}
 {#  <script src="https://static.example.com/dummy/an-external-javascript-example.js"></script>#}
 
-  {# include some local JavaScript #}
+{#  #}{# include some local JavaScript #}
   <script src="{{ asset('../modules/va_bulkfeaturemanager/views/vue/js/chunk-vendors.js') }}" async defer></script>
   <script src="{{ asset('../modules/va_bulkfeaturemanager/views/vue/js/app.js') }}" async defer></script>
 {% endblock %}

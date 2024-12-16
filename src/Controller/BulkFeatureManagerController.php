@@ -148,7 +148,7 @@ class BulkFeatureManagerController extends FrameworkBundleAdminController{
         }
 
         return $this->render('@Modules/va_bulkfeaturemanager/views/templates/admin/index.html.twig', [
-            'layoutTitle' => $this->trans('Unit Price Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
+//            'layoutTitle' => $this->trans('Unit Price Manager', 'Modules.Va_bulkfeaturemanager.Admin'),
             'bulkFeatureManagerForm' => $resForm->createView(),
             'gridForm' => $this->presentGrid($featureProductsGrid)
 
