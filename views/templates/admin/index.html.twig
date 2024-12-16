@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-{#  {{ dump(gridForm) }}#}
+  {{ dump(getFeaturesDataUrl) }}
   <div id="app"></div>
 {% endblock %}
 
@@ -17,16 +17,10 @@
   {{ parent() }}
 
   <script>
-    var yourModule = {
-      columns: {{ gridForm.columns|json_encode|raw }},
-      actions: {{ gridForm.actions|json_encode|raw }},
-      data: {{ gridForm.data|json_encode|raw }},
-      pagination: {{ gridForm.pagination|json_encode|raw }},
-      sorting: {{ gridForm.sorting|json_encode|raw }},
-      filters: {{ gridForm.filters|json_encode|raw }},
-      attributes: {{ gridForm.attributes|json_encode|raw }},
-      view_options: {{ gridForm.view_options|json_encode|raw }}
-    };
+
+
+    var getFeaturesDataUrl = {{ getFeaturesDataUrl|json_encode|raw }}
+    var getProductsListDataUrl = {{ getProductListDataUrl|json_encode|raw }}
   </script>
 
   {# include some external JavaScript #}
