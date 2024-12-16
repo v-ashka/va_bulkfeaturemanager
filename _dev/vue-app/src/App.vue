@@ -1,21 +1,24 @@
 <template>
   <TopMenu/>
-  <HelloWorld msg="hi"></HelloWorld>
+  <FeatureContainer :getFeatures="getFeaturesDataUrl" :getProductsList="getProductsListDataUrl"></FeatureContainer>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-import HelloWorld from "@/components/HelloWorld.vue";
+import FeatureContainer from './components/FeatureContainer.vue'
 import TopMenu from "@/components/header/menu/TopMenu.vue";
 
-const { yourModule } = window;
-console.log(yourModule.columns);
+const { getFeaturesDataUrl, getProductsListDataUrl } = window;
+console.log(getFeaturesDataUrl, getProductsListDataUrl)
 export default {
   name: 'App',
-  components: {TopMenu, HelloWorld},
-  state: {
-    yourModule
+  components: {TopMenu, FeatureContainer},
+  data() {
+    return {
+      getFeaturesDataUrl, // Zapisz wartość w danych komponentu
+      getProductsListDataUrl
+    };
   },
+
 }
 </script>
 
