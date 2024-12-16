@@ -1,9 +1,9 @@
 # Main module page
-va_bulkfeaturemanager:
-  path: va_bulkfeaturemanager/configuration
-  methods: [GET, POST]
-  defaults:
-    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayProductConfiguration'
+#va_bulkfeaturemanager:
+#  path: va_bulkfeaturemanager/configuration
+#  methods: [GET, POST]
+#  defaults:
+#    _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::displayProductConfiguration'
 
 # Feature grid list page
 va_bulkfeaturemanager_features_list:
@@ -128,3 +128,24 @@ va_bulkfeaturemanager_import_upload:
   methods: [POST]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\BulkFeatureManagerController::uploadFile'
+
+
+# API
+
+va_bulkfeaturemanager_get_route_links:
+  path: va_bulkfeaturemanager/configuration
+  methods: [ GET ]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getRouteLinks'
+
+va_bulkfeaturemanager_get_features_data:
+  path: va_bulkfeaturemanager/features_api
+  methods: [ GET ]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getFeaturesData'
+
+va_bulkfeaturemanager_get_products_data:
+  path: va_bulkfeaturemanager/products
+  methods: [ GET ]
+  defaults:
+    _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getProductsList'
