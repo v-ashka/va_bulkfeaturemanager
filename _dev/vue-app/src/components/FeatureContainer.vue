@@ -1,29 +1,22 @@
 <template>
   <div class="container-fluid bg-container min-h-screen">
     <div class="row ">
-      <div class="col">
-        <button class="v-btn"><i class="material-icons">add</i>Add feature</button>
-      </div>
-      <div class="col">
-        <button class="v-btn"><i class="material-icons">delete</i>Remove feature</button>
-      </div>
-
-      <div class="col">
-        <button class="v-btn" @click="usePro"><i class="material-icons">filter_alt</i>Filter</button>
-      </div>
-      <div class="col">
-        <label for="underline_select" class="block mb-2 text-sm font-medium text-gray-900">Set product limit:</label>
-        <select id="underline_select" v-model="selectedLimit" @change="changeLimit" class="v-btn	">
-          <option
-            v-for="limit in availableLimits"
-            :key="limit"
-            :value="limit"
-            :selected="limit === selectedLimit">
-            {{ limit }}
-          </option>
-        </select>
-      </div>
-      <div class="col">
+      <div class="col flex gap-4">
+        <ActionButton
+          label="Add feature"
+          icon="add"
+          @click="() => {}"
+        />
+        <ActionButton
+          label="Remove feature"
+          icon="delete"
+          @click="() => {}"
+        />
+        <ActionButton
+          label="Filter"
+          icon="filter_alt"
+          @click="() => {}"
+        />
         <div class="dropdown">
           <button class="v-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
             <i class="material-icons">settings</i> Import/Export
@@ -34,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12">
+      <div class="col-12 flex gap-4">
         <form class="w-100">
           <div>
             <input type="text" placeholder="Search in products..." aria-label="Search in products..." aria-describedby="basic-addon1">
@@ -43,7 +36,17 @@
             </div>
           </div>
         </form>
+        <SelectButton
+          :modelValue="selectedLimit"
+          :options="availableLimits"
+          label="Set product limit:"
+          @update:modelValue="(value) => (selectedLimit = value)"
+          @change="changeLimit"
+        />
       </div>
+
+
+
     </div>
 
     <div v-if="productsLoading" class="flex justify-center py-48 h-fit">
@@ -100,8 +103,11 @@
 import { useFeatures } from '@/api/composables/useFeatures';
 import { useProducts } from '@/api/composables/useProducts';
 import { ref } from 'vue';
+import SelectButton from "./utils/SelectButton.vue";
+import ActionButton from "./utils/ActionButton.vue";
 export default {
   name: 'FeatureContainer',
+  components: {ActionButton, SelectButton},
   props: {
     getFeatures: {
       type: String,
