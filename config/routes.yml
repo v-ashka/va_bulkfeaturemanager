@@ -132,7 +132,7 @@ va_bulkfeaturemanager_import_upload:
 
 # API
 
-va_bulkfeaturemanager_get_route_links:
+va_bulkfeaturemanager:
   path: va_bulkfeaturemanager/configuration
   methods: [ GET ]
   defaults:
@@ -144,8 +144,12 @@ va_bulkfeaturemanager_get_features_data:
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getFeaturesData'
 
+
 va_bulkfeaturemanager_get_products_data:
-  path: va_bulkfeaturemanager/products
+  path: va_bulkfeaturemanager/products/{productsLimit}
   methods: [ GET ]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getProductsList'
+    requirements:
+      productsLimit: \d+
+
