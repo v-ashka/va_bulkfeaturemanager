@@ -5,18 +5,20 @@ export function useProducts(url) {
   const products = ref([]);
   const error = ref(null);
   const loading = ref(true);
-
   const loadProducts = async (fetchUrl) => {
     try {
+      // get params from url
+      loading.value = true;
       const data = await fetchData(fetchUrl);
-      // console.log(data)
-      products.value = data
+
+      products.value = data.records
     } catch (err) {
       error.value = err.message;
     } finally {
       loading.value = false;
     }
   };
+
 
   onMounted(() => {
     if (url) {
@@ -36,5 +38,6 @@ export function useProducts(url) {
     products,
     error,
     loading,
+    loadProducts
   };
 }
