@@ -13,7 +13,7 @@ class UnitFeatureFilters extends Filters
     public static function getDefaults(): array
     {
         return [
-            'limit' => 20,
+            'limit' => 23,
             'offset' => 0,
             'orderBy' => 'id_unit_feature',
             'sortOrder' => 'asc',

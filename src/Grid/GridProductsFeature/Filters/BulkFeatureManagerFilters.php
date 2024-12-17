@@ -21,10 +21,10 @@ class BulkFeatureManagerFilters extends Filters
      * Get defaults filter values
      * @return int[]
      */
-    public static function getDefaults()
+    public static function getDefaults(): array
     {
         return [
-            'limit' => 10,
+            'limit' => 15,
             'offset' => 0,
             'orderBy' => 'id_product',
             'sortOrder' => 'asc',
