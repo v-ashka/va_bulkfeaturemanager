@@ -147,7 +147,7 @@ va_bulkfeaturemanager_get_features_data:
 
 va_bulkfeaturemanager_get_products_data:
   path: va_bulkfeaturemanager/products/{productsLimit}
-  methods: [ GET ]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'Va_bulkfeaturemanager\Controller\UnitPriceRestApiController::getProductsList'
     requirements:

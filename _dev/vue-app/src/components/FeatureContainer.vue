@@ -1,11 +1,12 @@
 <template>
   <div class="container-fluid bg-container min-h-screen">
-    <div class="row ">
-      <div class="col flex gap-4">
+    <div class="row gap-4">
+      <div class="col flex gap-4 flex-wrap">
         <ActionButton
           label="Add feature"
           icon="add"
           @click="() => {}"
+          class="max-sm:grow"
         />
         <ActionButton
           label="Remove feature"
@@ -16,26 +17,27 @@
           label="Filter"
           icon="filter_alt"
           @click="() => {}"
+          class="max-sm:grow"
         />
-        <div class="dropdown">
-          <button class="v-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+
+        <div class="v-dropdown">
+          <button class="dropdown-toggle grow px-2 py-1 rounded-lg border-2 border-slate-400/30 bg-slate-200/10 flex flex-wrap gap-2 hover:bg-slate-200/50 hover:border-slate-400/50 ease-in duration-100 active:bg-slate-200 active:border-slate-400 focus:border-slate-400 items-center" type="button" data-toggle="dropdown" aria-expanded="false">
             <i class="material-icons">settings</i> Import/Export
           </button>
-          <div class="dropdown-menu">
+          <div class="dropdown-menu text-black rounded-lg border-2 border-slate-400/30 bg-slate-100">
             <a class="dropdown-item" href="#">Import files</a>
             <a class="dropdown-item" href="#">Export</a>
           </div>
         </div>
       </div>
-      <div class="col-12 flex gap-4">
-        <form class="w-100">
-          <div>
-            <input type="text" placeholder="Search in products..." aria-label="Search in products..." aria-describedby="basic-addon1">
-            <div class="input-group-prepend">
-              <button class="v-btn">Search</button>
-            </div>
-          </div>
-        </form>
+      <div class="col-12 flex gap-4 flex-wrap">
+        <SearchForm
+          label="Search"
+          icon="search"
+          placeholder="Search for products..."
+          @click="onSearchClick"
+          @change="onSearchChange"
+        />
         <SelectButton
           :modelValue="selectedLimit"
           :options="availableLimits"
@@ -102,12 +104,13 @@
 <script>
 import { useFeatures } from '@/api/composables/useFeatures';
 import { useProducts } from '@/api/composables/useProducts';
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import SelectButton from "./utils/SelectButton.vue";
 import ActionButton from "./utils/ActionButton.vue";
+import SearchForm from "@/components/utils/SearchForm.vue";
 export default {
   name: 'FeatureContainer',
-  components: {ActionButton, SelectButton},
+  components: {SearchForm, ActionButton, SelectButton},
   props: {
     getFeatures: {
       type: String,
@@ -118,6 +121,7 @@ export default {
       required: true
     }
   },
+
   setup(props) {
     const availableLimits = [10,20,50,100];
     const selectedLimit = ref(10);
@@ -141,7 +145,28 @@ export default {
       loadProducts(newUrl)
 
     }
-    console.log(products)
+
+    const searchQuery = ref("");
+
+    const onSearchClick = () => {
+      console.log("Search clicked!");
+      // Możesz tutaj dodać logikę wyszukiwania, np. filtrowanie produktów
+    };
+
+    const onSearchChange = (value) => {
+      searchQuery.value = value;
+      console.log("Search query:", value);
+      // Możesz dodać logikę aktualizowania wyników na podstawie query
+    };
+
+    const filteredProducts = computed(() => {
+      if (!searchQuery.value) {
+        return products;
+      }
+      return products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
+    });
 
     return{
     // features
@@ -155,7 +180,11 @@ export default {
       productsLoading,
       changeLimit,
       availableLimits,
-      selectedLimit
+      selectedLimit,
+      onSearchClick,
+      onSearchChange,
+      searchQuery,
+      filteredProducts
     }
 
   },

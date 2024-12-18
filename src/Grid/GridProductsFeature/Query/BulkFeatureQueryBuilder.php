@@ -26,6 +26,7 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        dump($searchCriteria);
 //        Create query builder with combined columns from getQueryBuilder() method
         $qb = $this->getQueryBuilder();
         $qb

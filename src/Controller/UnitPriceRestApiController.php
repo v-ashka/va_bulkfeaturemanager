@@ -28,10 +28,24 @@ class UnitPriceRestApiController extends FrameworkBundleAdminController
         if ($productsLimit == null){
             $productsLimit = (int)$request->get('limit', $filters->getLimit());
         }
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        dump($request->attributes->all());
+        dump($request->query->all());
+        dump($responseBuilder);
+        dump($responseBuilder);
+        // Build search response
+        dd($responseBuilder->buildSearchResponse(
+            $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory'),
+            $request,
+            $filters->getFilterId(),
+            'va_bulkfeaturemanager_get_features_data'
+        ));
+
 
         $grid = $this->get('prestashop.module.va_bulkfeaturemanager.grid.factory.bulkfeaturemanager');
         $filters->set('limit', $productsLimit);
-
+//        dd($filters);
         $records = $grid->getGrid($filters)->getData()->getRecords();
         return $this->json(
             [
@@ -40,5 +54,4 @@ class UnitPriceRestApiController extends FrameworkBundleAdminController
             ]
        );
     }
-
 }

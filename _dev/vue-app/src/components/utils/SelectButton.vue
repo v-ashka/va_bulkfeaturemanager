@@ -1,13 +1,13 @@
 <template>
-  <div class="select-button flex flex-row items-baseline gap-2 bg-slate-300/10 border-2 rounded-lg relative w-56 px-4">
-    <label for="underline_select" class="absolute bottom-0 z-0 left-2">{{ label }}</label>
+  <div class="select-button flex flex-row items-baseline gap-2 relative w-56 px-4" style="height: 50px">
+    <label for="underline_select" class="absolute top-0 z-0 left-2 m-0 py-2">{{ label }}</label>
     <select
       id="underline_select"
       v-model="internalValue"
       @change="onChange"
-      class="bg-slate-300/10 border-0 rounded-lg py-2 w-full text-right absolute right-0"
+      class="bg-slate-300/10 border-2 rounded-lg py-2 w-full absolute right-0 ps-32"
     >
-      <option v-for="limit in options" :key="limit" :value="limit">
+      <option v-for="limit in options" :key="limit" :value="limit" class="text-left">
         {{ limit }}
       </option>
     </select>
