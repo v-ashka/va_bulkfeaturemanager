@@ -5,6 +5,7 @@ namespace Va_bulkfeaturemanager\Controller;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
+use Va_bulkfeaturemanager\Grid\GridFeatureList\Filters\UnitFeatureFilters;
 use Va_bulkfeaturemanager\Grid\GridProductsFeature\Filters\BulkFeatureManagerFilters;
 
 class UnitPriceRestApiController extends FrameworkBundleAdminController
@@ -28,24 +29,9 @@ class UnitPriceRestApiController extends FrameworkBundleAdminController
         if ($productsLimit == null){
             $productsLimit = (int)$request->get('limit', $filters->getLimit());
         }
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        dump($request->attributes->all());
-        dump($request->query->all());
-        dump($responseBuilder);
-        dump($responseBuilder);
-        // Build search response
-        dd($responseBuilder->buildSearchResponse(
-            $this->get('prestashop.module.va_bulkfeaturemanager.grid.grid_feature_list.definition.factory.unit_feature_definition_factory'),
-            $request,
-            $filters->getFilterId(),
-            'va_bulkfeaturemanager_get_features_data'
-        ));
-
 
         $grid = $this->get('prestashop.module.va_bulkfeaturemanager.grid.factory.bulkfeaturemanager');
         $filters->set('limit', $productsLimit);
-//        dd($filters);
         $records = $grid->getGrid($filters)->getData()->getRecords();
         return $this->json(
             [
@@ -54,4 +40,15 @@ class UnitPriceRestApiController extends FrameworkBundleAdminController
             ]
        );
     }
+
+    public function searchProductData(Request $request){
+        $factory = $this->get('prestashop.module.va_bulkfeaturemanager.grid.query_builder.bulkfeaturemanager');
+//        $qb = $factory->getGridQueryBuilder(['category' => "Art", 'id_product' => 3]);
+        $qb = $factory->getGridQueryBuilder(['category'=> 'Art', 'reference' => 'demo_5']);
+        return $this->json([
+           'records' =>  $qb->execute()->fetchAllAssociative(),
+            'totalRecords' => $qb->execute()->rowCount(),
+        ]);
+    }
+
 }

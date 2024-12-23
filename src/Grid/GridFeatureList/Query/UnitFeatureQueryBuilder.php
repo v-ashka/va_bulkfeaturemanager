@@ -29,7 +29,7 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param array $filters
      * @return QueryBuilder
      */
-    private function getGridQueryBuilder(array $filters): QueryBuilder{
+    public function getGridQueryBuilder(array $filters): QueryBuilder{
 
         $allowedFilters = [
             'id_unit_feature',
@@ -39,7 +39,8 @@ class UnitFeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         ];
 
         $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'unit_feature', 'uf');
+        $qb->select('uf.*')  // Dodajemy tę linię, aby określić jakie kolumny chcemy pobrać
+            ->from($this->dbPrefix . 'unit_feature', 'uf');
 
         foreach($filters as $name => $value){
             if(!in_array($name, $allowedFilters, true)){

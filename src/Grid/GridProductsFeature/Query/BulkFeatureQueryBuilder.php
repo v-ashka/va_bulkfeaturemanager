@@ -26,7 +26,7 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        dump($searchCriteria);
+//        dd($searchCriteria);
 //        Create query builder with combined columns from getQueryBuilder() method
         $qb = $this->getQueryBuilder();
         $qb
@@ -48,6 +48,63 @@ class BulkFeatureQueryBuilder extends AbstractDoctrineQueryBuilder{
 
         return $qb;
 
+    }
+
+    /**
+     * Get query search result from grid
+     * @param array $filters
+     */
+    public function getGridQueryBuilder(array $filters){
+
+        $allowedFilters = [
+            "id_product",
+            "reference",
+            "name",
+            "category",
+            "feature_value",
+            "feature_id_name",
+            "ean13",
+            "isbn"
+        ];
+
+        $qb = $this->getQueryBuilder();
+        $qb->select('pl.id_product as id_product, pc.name as category, ufv.value as feature_value, ufp.id_unit_feature, p.ean13, p.isbn, p.reference');
+        foreach($filters as $name => $value){
+            if(!in_array($name, $allowedFilters, true)){
+                continue;
+            }
+
+            if('id_product' === $name){
+                $qb->andWhere("ufp.`id_product` = :id_product");
+                $qb->setParameter(":id_product", $value);
+                continue;
+            }
+
+            if('reference' === $name){
+                $qb->andWhere("p.`reference` = :reference");
+                $qb->setParameter(":reference", $value);
+                continue;
+            }
+
+            if('ean13' === $name){
+                $qb->andWhere("p.`ean13` = :ean13");
+                $qb->setParameter(":ean13", $value);
+                continue;
+            }
+
+            if('category' === $name){
+                $qb->andWhere("pc.`name` = :category");
+                $qb->setParameter(":category", $value);
+                continue;
+            }
+
+
+
+            $qb->andWhere("$name LIKE :$name");
+            $qb->setParameter($name, "%$value%");
+        }
+
+        return $qb;
     }
 
     /**
